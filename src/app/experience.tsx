@@ -28,10 +28,10 @@ export default function Experience() {
         {
             company: "Halvex",
             role: "Back End Developer",
-            description: "Developed Discord bot using Discord.js and Typescript to link consumer accounts to Discord " +
+            description: "Developed Discord bot using Discord.js and TypeScript to link consumer accounts to Discord " +
                 "server via the Linked Roles feature. Required knowledge of OAuth2 and REST APIs for secure account linking.",
             period: "Feb 2023 - May 2025",
-            technologies: ["Javascript", "Typescript", "OAuth2", "Discord.js"],
+            technologies: ["Javascript", "TypeScript", "OAuth2", "Discord.js"],
             link: "https://halvex.net/"
         },
         {
