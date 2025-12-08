@@ -16,32 +16,36 @@ export default function Experience() {
 
     const experiences: ExperienceItem[] = [
         {
+            company: "Google",
+            role: "Incoming Software Engineering Intern",
+            description: "YouTube Infrastructure (Video Player Experience)",
+            period: "Jun 2026 - Sep 2026",
+            technologies: ["Java", "Android", "C++"],
+            link: "https://www.videolan.org/"
+        },
+        {
             company: "VideoLAN",
             role: "Software Engineering Intern",
-            description: "Worked on VLC Media Player, adding new video filter and access modules. " +
-                "Implemented dithering and color space conversion filters, face detection using libfacedetection, " +
-                "and SAM2 object segmentation for real-time video processing.",
-            period: "Jun 2025 - Present",
-            technologies: ["C", "C++", "Computer Vision", "Machine Learning", "Makefile", "Meson"],
+            description: "VLC Media Player",
+            period: "Jun 2025 - Sep 2025",
+            technologies: ["C", "C++", "OpenCV", "AI/ML", "Makefile", "Meson"],
             link: "https://www.videolan.org/"
         },
         {
             company: "Halvex",
             role: "Back End Developer",
-            description: "Developed Discord bot using Discord.js and TypeScript to link consumer accounts to Discord " +
-                "server via the Linked Roles feature. Required knowledge of OAuth2 and REST APIs for secure account linking.",
-            period: "Feb 2023 - May 2025",
-            technologies: ["Javascript", "TypeScript", "OAuth2", "Discord.js"],
+            description: "Linked Roles Discord Bot",
+            period: "Feb 2023 - June 2023",
+            technologies: ["JavaScript", "TypeScript", "Express.js", "Node.js", "MongoDB"],
             link: "https://halvex.net/"
         },
         {
-            company: "Notelove",
-            role: "Boston Web Director",
-            description: "Managed non-profit organization website, helped create mini-scripts to send emails and newsletters, " +
-                "and managed database of hundreds of teachers and students in the Boston area.",
-            period: "Mar 2021 - July 2024",
-            technologies: ["Javascript", "Google Sheets", "Scripting"],
-            link: "https://www.notelove.org/"
+            company: "Chelmsford Chinese Language School",
+            role: "Java Mentor",
+            description: "Java Introduction Course Teacher",
+            period: "Sep 2021 - Feb 2022",
+            technologies: ["Java"],
+            link: "https://ccls-ma.org/"
         },
     ];
 
@@ -58,6 +62,7 @@ export default function Experience() {
                         key={index}
                         sx={{
                             padding: 2,
+                            flexDirection: 'column',
                             borderRadius: 2,
                             transition: 'all 0.3s ease',
                             filter: hoveredIndex !== null && hoveredIndex !== index ? 'blur(2px)' : 'none',
@@ -112,7 +117,7 @@ export default function Experience() {
                                 </Stack>
                             )}
                         </Grid>
-                        <Grid sx={{textAlign: 'right', marginTop: 1}}>
+                        <Grid sx={{textAlign: 'left', marginTop: 1}}>
                             <Typography variant="body2" color="#888888">
                                 {exp.period}
                             </Typography>
@@ -135,7 +140,7 @@ export default function Experience() {
                     }}
                     variant="outlined"
                 >
-                    View Full Resume
+                    View Full Resume (PDF)
                 </Button>
                 <Modal
                     open={resumeOpen}
@@ -159,7 +164,7 @@ export default function Experience() {
                         overflow: 'hidden'
                     }}>
                         <iframe
-                            src="http://docs.google.com/gview?a=v&pid=explorer&chrome=false&api=true&embedded=true&srcid=1WDGGAtyx86CkRad29L4SDC88b1yC2zhL6I-lL2d7Bm4&hl=en&embedded=true"
+                            src="https://drive.google.com/file/d/1X7FQprSXGQ2vX4TKYBWlAJ5qKquGouP2/preview"
                             style={{width: '100%', height: '100%', border: 'none'}}
                             title="Resume"
                         />
