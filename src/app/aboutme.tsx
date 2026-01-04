@@ -20,8 +20,8 @@ export default function AboutMe() {
                 }}>PulseBeat02</Typography>.
                 </Typography>
                 <Typography variant="body1">
-                    I currently intern at {" "}<CustomLink href="https://www.google.com/">Google</CustomLink>,
-                    where I work on the {" "}<CustomLink href="https://youtube.com">YouTube video player</CustomLink>.
+                    I'm an incoming intern at {" "}<CustomLink href="https://www.google.com/">Google</CustomLink>,
+                    where I will work on the {" "}<CustomLink href="https://youtube.com">YouTube video player</CustomLink>.
                     I contribute to bring new
                     cool features to the ecosystem, like integrating computer vision and machine learning into media
                     playback with {" "} <CustomLink href="https://github.com/facebookresearch/sam2">SAM2 </CustomLink>

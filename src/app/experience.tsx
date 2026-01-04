@@ -164,7 +164,7 @@ export default function Experience() {
                         overflow: 'hidden'
                     }}>
                         <iframe
-                            src="https://drive.google.com/file/d/1X7FQprSXGQ2vX4TKYBWlAJ5qKquGouP2/preview"
+                            src="https://drive.google.com/file/d/1w4JMuNz7u3fBNDrK4lqDuI_pr-JvCRdK/preview"
                             style={{width: '100%', height: '100%', border: 'none'}}
                             title="Resume"
                         />

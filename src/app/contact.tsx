@@ -80,7 +80,7 @@ export default function Contact() {
                 <SocialIcon Icon={DiscordIcon} href="https://discord.gg/MgqRKvycMC" label={"Discord"}/>
                 <SocialIcon Icon={GitHubIcon} href="https://github.com/PulseBeat02" label={"GitHub"}/>
                 <SocialIcon Icon={LinkedInIcon} href="https://linkedin.com/in/brandonli28" label={"LinkedIn"}/>
-                <SocialIcon Icon={EmailIcon} href="mailto:brandonli28@ucla.edu" label={"Email"}/>
+                <SocialIcon Icon={EmailIcon} href="mailto:jobs@brandonli.me" label={"Email"}/>
                 <SocialIcon Icon={PhoneIcon} href="tel:+1-978-245-5532" label={"Phone"}/>
             </Grid>
         </Grid>
