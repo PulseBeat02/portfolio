@@ -18,7 +18,7 @@
     "gray-matter": "^4.0.3",
     "motion": "^12.23.3",
     "next": "16.1.6",
-    "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote": "^6.0.0",
     "next-sitemap": "^4.2.3",
     "nextra": "^4.2.17",
     "nextra-theme-blog": "^4.2.17",
