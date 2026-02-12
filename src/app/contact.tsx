@@ -4,6 +4,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import GitHubIcon from '@mui/icons-material/GitHub'
+import YouTubeIcon from '@mui/icons-material/YouTube'
 import {SectionHeading} from "@/app/common";
 import {ElementType, MouseEvent} from "react";
 
@@ -79,6 +80,7 @@ export default function Contact() {
             <Grid container spacing={2} marginTop={5} sx={{maxWidth: '700px'}}>
                 <SocialIcon Icon={DiscordIcon} href="https://discord.gg/MgqRKvycMC" label={"Discord"}/>
                 <SocialIcon Icon={GitHubIcon} href="https://github.com/PulseBeat02" label={"GitHub"}/>
+                <SocialIcon Icon={YouTubeIcon} href="https://www.youtube.com/@pulsebeat_02" label={"YouTube"}/>
                 <SocialIcon Icon={LinkedInIcon} href="https://linkedin.com/in/brandonli28" label={"LinkedIn"}/>
                 <SocialIcon Icon={EmailIcon} href="mailto:jobs@brandonli.me" label={"Email"}/>
                 <SocialIcon Icon={PhoneIcon} href="tel:+1-978-245-5532" label={"Phone"}/>

@@ -17,11 +17,11 @@ export default function Experience() {
     const experiences: ExperienceItem[] = [
         {
             company: "Google",
-            role: "Incoming Software Engineering Intern",
-            description: "YouTube Infrastructure (Video Player Experience)",
+            role: "Software Engineering Intern (Incoming)",
+            description: "Google (YouTube)",
             period: "Jun 2026 - Sep 2026",
             technologies: ["Java", "Android", "C++"],
-            link: "https://www.videolan.org/"
+            link: "https://www.youtube.com/"
         },
         {
             company: "VideoLAN",
@@ -33,7 +33,7 @@ export default function Experience() {
         },
         {
             company: "Halvex",
-            role: "Back End Developer",
+            role: "Software Developer Intern",
             description: "Linked Roles Discord Bot",
             period: "Feb 2023 - June 2023",
             technologies: ["JavaScript", "TypeScript", "Express.js", "Node.js", "MongoDB"],
@@ -164,7 +164,7 @@ export default function Experience() {
                         overflow: 'hidden'
                     }}>
                         <iframe
-                            src="https://drive.google.com/file/d/1w4JMuNz7u3fBNDrK4lqDuI_pr-JvCRdK/preview"
+                            src="https://drive.google.com/file/d/1gzSbu7j6GxPI_jbR-XG85EmdkF02wchn/preview"
                             style={{width: '100%', height: '100%', border: 'none'}}
                             title="Resume"
                         />

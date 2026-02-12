@@ -7,7 +7,7 @@ export default function AboutMe() {
             <SectionHeading number={2} text="About Me"/>
             <Stack spacing={2}>
                 <Typography variant="body1">
-                    I&apos;m a college sophomore from Boston passionate about constructing efficient high-end software
+                    I&apos;m a college sophomore from Boston passionate about developing high-end software
                     for the open-source
                     community. I currently study Computer Science at the {" "}
                     <CustomLink href="https://www.ucla.edu/">
@@ -27,7 +27,8 @@ export default function AboutMe() {
                 </Typography>
                 <Typography variant="body1">
                     In my spare time, I enjoy playing clarinet in my university orchestra and wind ensemble, and
-                    develop my own open-source projects.
+                    develop my own open-source projects. I also maintain a YouTube channel, where I discuss some of
+                    my projects in further depth.
                 </Typography>
             </Stack>
         </Grid>

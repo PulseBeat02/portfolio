@@ -16,37 +16,31 @@ export default function Projects() {
     const projects: ProjectItem[] = [
         {
             title: "mcav",
-            description: "A cross-platform multimedia framework (~100 stars) for building Java media applications. " +
-                "Integrates with VLC and mpv for fast, native media playback alongside a self-written avcodec player. " +
-                "Uses OpenCV for fast image processing, and contains several other built-in modules, such as an HTTP player " +
-                "that uses Javalin to play audio through a web interface.",
+            description: "A cross-platform Java multimedia framework (130 stars) for building Java media applications.",
             thumbnail: "/mcav.webp",
-            technologies: ["Java", "Assembly", "Javalin", "FFmpeg", "OpenCV"],
+            technologies: ["Java", "Spring Boot", "TypeScript", "CI/CD"],
             github: "https://github.com/PulseBeat02/mcav"
         },
         {
-            title: "mpvj",
-            description: "Java bindings for libmpv, the media player library used by mpv. Provides a native interface to access " +
-                "media player features like control, playback, and rendering.",
+            title: "yt-media-storage",
+            description: "A tool to encode/decode files into YouTube videos. Check out the YouTube video linked.",
+            thumbnail: "/yt-media-storage.webp",
+            technologies: ["C++", "Assembly", "SIMD", "Encryption", "Coding Theory", "Compression"],
+            github: "https://github.com/PulseBeat02/yt-media-storage"
+        },
+        {
+            title: "Pulse Media Player",
+            description: "A robust media player written in 1K lines of C++ code. Check out the YouTube video linked.",
             thumbnail: "/mpv.webp",
-            technologies: ["Java", "JNA", "mpv"],
-            github: "https://github.com/PulseBeat02/mpvj"
+            technologies: ["C++", "OpenGL", "OpenAL", "FFmpeg"],
+            github: "https://github.com/PulseBeat02/video-player"
         },
         {
             title: "Murder Run",
-            description: "A Bukkit gamemode for Minecraft servers with over 30k lines of code. Inspired by Dead by Daylight, " +
-                "it contains several features like 100+ gadgets and abilities, easy map creation, and so much more. Uses " +
-                "Hibernate ORM to store maps and configurations.",
+            description: "A Bukkit gamemode for Minecraft servers with over 30k lines of code.",
             thumbnail: "/murderrun.webp",
             technologies: ["Java", "Hibernate", "Bukkit"],
             github: "https://github.com/PulseBeat02/murderrun"
-        },
-        {
-            title: "Portfolio Website",
-            description: "My portfolio website to showcase my projects and skills.",
-            thumbnail: "/nextjs.webp",
-            technologies: ["React", "Next.js", "TypeScript", "Material UI"],
-            github: "https://github.com/PulseBeat02/developer-portfolio"
         }
     ];
 
