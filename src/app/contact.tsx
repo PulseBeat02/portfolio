@@ -78,9 +78,9 @@ export default function Contact() {
                 </Typography>
             </Grid>
             <Grid container spacing={2} marginTop={5} sx={{maxWidth: '700px'}}>
-                <SocialIcon Icon={DiscordIcon} href="https://discord.gg/MgqRKvycMC" label={"Discord"}/>
                 <SocialIcon Icon={GitHubIcon} href="https://github.com/PulseBeat02" label={"GitHub"}/>
                 <SocialIcon Icon={YouTubeIcon} href="https://www.youtube.com/@pulsebeat_02" label={"YouTube"}/>
+                <SocialIcon Icon={DiscordIcon} href="https://discord.gg/MgqRKvycMC" label={"Discord"}/>
                 <SocialIcon Icon={LinkedInIcon} href="https://linkedin.com/in/brandonli28" label={"LinkedIn"}/>
                 <SocialIcon Icon={EmailIcon} href="mailto:jobs@brandonli.me" label={"Email"}/>
                 <SocialIcon Icon={PhoneIcon} href="tel:+1-978-245-5532" label={"Phone"}/>
