@@ -164,9 +164,9 @@ export default function Experience() {
                         overflow: 'hidden'
                     }}>
                         <iframe
-                            src="https://drive.google.com/file/d/1gzSbu7j6GxPI_jbR-XG85EmdkF02wchn/preview"
+                            src="/resume.pdf"
                             style={{width: '100%', height: '100%', border: 'none'}}
-                            title="Resume"
+                            title="Brandon Li's Resume"
                         />
                     </Box>
                 </Modal>
