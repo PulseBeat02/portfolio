@@ -1,0 +1,222 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+% \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+%   \textbf{\href{http://sourabhbajaj.com/}{\Large Sourabh Bajaj}} & Email : \href{mailto:sourabh@sourabhbajaj.com}{sourabh@sourabhbajaj.com}\\
+%   \href{http://sourabhbajaj.com/}{http://www.sourabhbajaj.com} & Mobile : +1-123-456-7890 \\
+% \end{tabular*}
+
+\begin{center}
+    \textbf{\Huge \scshape Brandon Li} \\ \vspace{1pt}
+    \small 978-245-5532 $|$ 
+    \href{mailto:jobs@brandonli.me}{\underline{jobs@brandonli.me}} $|$
+    \href{https://brandonli.me}{\underline{brandonli.me}} $|$
+    \href{https://linkedin.com/in/brandonli28}{\underline{linkedin.com/in/brandonli28}} $|$
+    \href{https://github.com/PulseBeat02}{\underline{github.com/PulseBeat02}}
+\end{center}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of California, Los Angeles (UCLA)}{Expected June 2027}
+      {Bachelor of Science in Computer Science}{Los Angeles, CA}
+    \vspace{2mm}
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Software Engineering Intern (Incoming)}{June 2026 -- Sept 2026}
+      {Google (YouTube)}{San Bruno, CA}
+    \vspace{1mm}
+    \resumeSubheading
+      {Software Engineering Intern}{June 2025 -- Sept 2025}
+      {VideoLAN}{Remote}
+      \resumeItemListStart
+        \resumeItem{Developed multiple C/C++ video filters for VLC Media Player (traffic cone).}
+        \resumeItem{Employed Segment Anything Model 2 and OpenCV to segment, highlight, and track video objects.}
+        \resumeItem{Added face detection features using YuNet ML model to track hundreds of faces concurrently.}
+        \resumeItem{Implemented fast video-to-GIF conversion by developing several dithering algorithms.}
+        \resumeItem{Analyzed the AV1 specification and studied the dav1d video decoder codebase.}
+      \resumeItemListEnd
+    \vspace{1mm}
+    \resumeSubheading
+      {Software Developer Intern}{Feb. 2023 -- June 2023}
+      {Halvex}{Remote}
+      \resumeItemListStart
+        \resumeItem{Designed a MongoDB-based TypeScript RESTful API to fetch customer data and emails.}
+        \resumeItem{Launched a JavaScript Discord bot to link 100+ customers' WHMCS accounts with Discord.}
+        \resumeItem{Established a secure OAuth2 gateway RESTful API using Express.js for account verification.}
+      \resumeItemListEnd
+    \vspace{1mm}
+    \resumeSubheading
+      {Java Mentor}{Sept. 2021 -- Feb. 2022}
+      {Chelmsford Chinese Language School}{Remote}
+      \resumeItemListStart
+        \resumeItem{Taught 20 weekly 1-hour lessons to 10 middle/high-school students.}
+        \resumeItem{Raised nearly 1,000 dollars for the non-profit, helping the school keep afloat during COVID.}
+        \resumeItem{Spent 1-2 additional hours weekly preparing homework and slides to help students master material.}
+      \resumeItemListEnd
+    \vspace{1mm}
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/PulseBeat02/mcav}{mcav}} $|$ \emph{Java, Spring Boot, TypeScript, CI/CD}}{June 2020 -- Present}
+          \resumeItemListStart
+            \resumeItem{Popular Java framework (130 stars) for building media applications.}
+            \resumeItem{Integrates with VLC/mpv with a documented image-processing pipeline API.}
+            \resumeItem{Includes Spring Boot module to stream audio via websocket to TypeScript/Howler.js frontend, and Selenium/Playwright module for browser streaming.}
+            \resumeItem{Configured CI/CD with TeamCity on Oracle Cloud to enhance development velocity.}
+            \resumeItem{Provides an optimized Java video player up to 2x faster than leading Java players.}
+          \resumeItemListEnd
+      \vspace{1mm}
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/PulseBeat02/yt-media-storage}{yt-media-storage}} $|$ \emph{C++, Assembly/SIMD, Encryption, Coding Theory, Compression}}{Feb. 2026 -- Present}
+          \resumeItemListStart
+            \resumeItem{Popular C++ tool (150 stars) for encoding file storage into YouTube videos.}
+            \resumeItem{Implemented Assembly/SIMD and OpenMP optimizations for an over 100x speed-up.}
+            \resumeItem{Includes optional menu and client-side file encryption via Qt 6 and libsodium.}
+            \resumeItem{Uses robust CRC/Wirehair error-correction to bypass YouTube video compression.}
+            \resumeItem{Includes \underline{\href{https://www.youtube.com/watch?v=l03Os5uwWmk}{technical explanation video}} that has over 100k views.}
+          \resumeItemListEnd
+      \vspace{1mm}
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/PulseBeat02/video-player}{Pulse Media Player}} $|$ \emph{C++, OpenGL, OpenAL, FFmpeg}}{Feb. 2026 -- Present}
+          \resumeItemListStart
+            \resumeItem{Robust C++ media player written in less than 1K lines of code.}
+            \resumeItem{Implemented GPU-accelerated video pipeline with shader processing.}
+            \resumeItem{Uses OpenAL for automatic audio device selection and playback.}
+          \resumeItemListEnd
+      \vspace{1mm}
+    \resumeSubHeadingListEnd
+
+
+
+%
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Java, C/C++, JavaScript/TypeScript, Assembly} \\
+     \textbf{Frameworks \& Libraries}{: Spring, Hibernate, FFmpeg, OpenCV, VLC, React, Next.js, Tailwind} \\
+     \textbf{Technologies}{: Git, MongoDB, Google Cloud, Oracle Cloud} \\
+     \textbf{Awards}{: USACO Gold, Google Foobar}
+    }}
+ \end{itemize}
+
+
+%-------------------------------------------
+\end{document}
