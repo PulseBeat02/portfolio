@@ -27,7 +27,9 @@ export default function AboutMe() {
                 </Typography>
                 <Typography variant="body1">
                     In my spare time, I enjoy playing clarinet in my university orchestra and wind ensemble, and
-                    develop my own open-source projects. I also maintain a YouTube channel, where I discuss some of
+                    develop my own open-source projects. I also maintain a
+                    {" "} <CustomLink href="https://www.youtube.com/@pulsebeat_02">YouTube channel</CustomLink>
+                    , where I discuss some of
                     my projects in further depth.
                 </Typography>
             </Stack>
