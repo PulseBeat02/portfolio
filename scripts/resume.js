@@ -16,11 +16,6 @@ const YOUTUBE_DATA_API_URL = "https://www.googleapis.com/youtube/v3/videos";
 const LATEX_COMPILE_URL = "https://latex.ytotech.com/builds/sync";
 const IMPRESSIONS_MULTIPLIER = 12;
 
-const YT_STORAGE_STATS_REGEX = /\(\d+\+? stars, \d+\+? forks\) for encoding/;
-const MCAV_STATS_REGEX = /\(\d+\+? stars, \d+\+? forks\) for building/;
-const VIEWERS_REGEX = /over [\d.]+[kKmM]+ viewers/;
-const IMPRESSIONS_REGEX = /over [\d.]+[kKmM]+ impressions/;
-
 function formatGitHubStat(n) {
     const remainder = n % 10;
     if (remainder === 0) {
@@ -84,39 +79,42 @@ async function fetchYouTubeStats(videoId) {
     }
 }
 
-async function updateStats(content) {
+async function buildPlaceholders() {
     const [ytStorage, mcav, youtube] = await Promise.all([
         fetchGitHubStats(GITHUB_OWNER, YT_STORAGE_REPO),
         fetchGitHubStats(GITHUB_OWNER, MCAV_REPO),
         fetchYouTubeStats(VIDEO_ID),
     ]);
+    const placeholders = {};
     if (ytStorage) {
-        const stars = formatGitHubStat(ytStorage.stars);
-        const forks = formatGitHubStat(ytStorage.forks);
-        content = content.replace(YT_STORAGE_STATS_REGEX, `(${stars} stars, ${forks} forks) for encoding`);
+        placeholders.YT_STORAGE_STARS = formatGitHubStat(ytStorage.stars);
+        placeholders.YT_STORAGE_FORKS = formatGitHubStat(ytStorage.forks);
     }
-
     if (mcav) {
-        const stars = formatGitHubStat(mcav.stars);
-        const forks = formatGitHubStat(mcav.forks);
-        content = content.replace(MCAV_STATS_REGEX, `(${stars} stars, ${forks} forks) for building`);
+        placeholders.MCAV_STARS = formatGitHubStat(mcav.stars);
+        placeholders.MCAV_FORKS = formatGitHubStat(mcav.forks);
     }
-
     if (youtube) {
-        const views = formatLargeNumber(youtube.views);
-        content = content.replace(VIEWERS_REGEX, `over ${views} viewers`);
-        const impressions = formatLargeNumber(youtube.views * IMPRESSIONS_MULTIPLIER, true);
-        content = content.replace(IMPRESSIONS_REGEX, `over ${impressions} impressions`);
+        placeholders.YT_VIEWERS = formatLargeNumber(youtube.views);
+        placeholders.YT_IMPRESSIONS = formatLargeNumber(youtube.views * IMPRESSIONS_MULTIPLIER, true);
     }
+    return placeholders;
+}
 
-    return content;
+function replacePlaceholders(content, placeholders) {
+    return content.replace(/\{\{(\w+)}}/g, (match, key) => {
+        if (key in placeholders) {
+            return placeholders[key];
+        }
+        console.warn(`Unknown placeholder: ${match}`);
+        return match;
+    });
 }
 
 async function resume() {
-    let content = fs.readFileSync(TEX_PATH, "utf-8");
-
-    content = await updateStats(content);
-    fs.writeFileSync(TEX_PATH, content);
+    const template = fs.readFileSync(TEX_PATH, "utf-8");
+    const placeholders = await buildPlaceholders();
+    const content = replacePlaceholders(template, placeholders);
 
     const response = await fetch(LATEX_COMPILE_URL, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
