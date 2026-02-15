@@ -2,6 +2,7 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "compile-resume": "node scripts/resume.js",
     "dev": "node scripts/resume.js && next dev --turbopack",
@@ -33,6 +34,7 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^10.0.0",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
