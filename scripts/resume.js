@@ -114,6 +114,4 @@ async function resume() {
     fs.writeFileSync(pdfPath, buffer);
 }
 
-const ONE_HOUR = 60 * 60 * 1000;
 await resume();
-setInterval(resume, ONE_HOUR);
