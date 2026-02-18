@@ -5,6 +5,7 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEX_PATH = path.join(__dirname, "..", "public", "resume.tex");
 const PDF_PATH = path.join(__dirname, "..", "public", "resume.pdf");
+const PDF2_PATH = path.join(__dirname, "..", "public", "resume2.pdf");
 
 const GITHUB_OWNER = "PulseBeat02";
 const YT_STORAGE_REPO = "yt-media-storage";
@@ -111,11 +112,7 @@ function replacePlaceholders(content, placeholders) {
     });
 }
 
-async function resume() {
-    const template = fs.readFileSync(TEX_PATH, "utf-8");
-    const placeholders = await buildPlaceholders();
-    const content = replacePlaceholders(template, placeholders);
-
+async function compile(content, outputPath) {
     const response = await fetch(LATEX_COMPILE_URL, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
             compiler: "pdflatex", resources: [{main: true, content}],
@@ -124,12 +121,24 @@ async function resume() {
 
     if (!response.ok) {
         const error = await response.text();
-        console.error("Resume compilation failed:\n", error);
+        console.error(`Resume compilation failed for ${outputPath}:\n`, error);
         process.exit(1);
     }
 
     const buffer = Buffer.from(await response.arrayBuffer());
-    fs.writeFileSync(PDF_PATH, buffer);
+    fs.writeFileSync(outputPath, buffer);
+}
+
+async function resume() {
+    const template = fs.readFileSync(TEX_PATH, "utf-8");
+    const placeholders = await buildPlaceholders();
+
+    const content2027 = replacePlaceholders(template, {...placeholders, GRAD_YEAR: "2027"});
+    const content2028 = replacePlaceholders(template, {...placeholders, GRAD_YEAR: "2028"});
+
+    await compile(content2027, PDF_PATH);
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    await compile(content2028, PDF2_PATH);
 }
 
 await resume();
