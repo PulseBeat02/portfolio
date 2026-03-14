@@ -15,14 +15,14 @@ export default function Experience() {
     }
 
     const experiences: ExperienceItem[] = [
-        {
-            company: "Google",
-            role: "Software Engineering Intern (Incoming)",
-            description: "Google (YouTube)",
-            period: "Jun 2026 - Sep 2026",
-            technologies: ["Java", "Android", "C++"],
-            link: "https://www.youtube.com/"
-        },
+        // {
+        //     company: "Google",
+        //     role: "Software Engineering Intern (Incoming)",
+        //     description: "Google (YouTube)",
+        //     period: "Jun 2026 - Sep 2026",
+        //     technologies: ["Java", "Android", "C++"],
+        //     link: "https://www.youtube.com/"
+        // },
         {
             company: "VideoLAN",
             role: "Software Engineering Intern",
@@ -125,7 +125,7 @@ export default function Experience() {
                     </Grid>
                 ))}
 
-                <Button
+ {/*               <Button
                     endIcon={<OpenInNewIcon/>}
                     onClick={handleOpenResume}
                     sx={{
@@ -169,7 +169,7 @@ export default function Experience() {
                             title="Brandon Li's Resume"
                         />
                     </Box>
-                </Modal>
+                </Modal>*/}
             </Stack>
         );
     };
