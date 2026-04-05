@@ -5,7 +5,7 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEX_PATH = path.join(__dirname, "..", "public", "resume.tex");
 const PDF_PATH = path.join(__dirname, "..", "public", "resume.pdf");
-const PDF2_PATH = path.join(__dirname, "..", "public", "resume2.pdf");
+const REDACTED_PDF_PATH = path.join(__dirname, "..", "public", "redacted.pdf");
 
 const GITHUB_OWNER = "PulseBeat02";
 const YT_STORAGE_REPO = "yt-media-storage";
@@ -129,16 +129,45 @@ async function compile(content, outputPath) {
     fs.writeFileSync(outputPath, buffer);
 }
 
+function redactContent(content) {
+    const MAX = 12;
+    const x = (s) => {
+        const redacted = s.replace(/[a-zA-Z0-9]/g, "X");
+        return redacted.length > MAX ? "X".repeat(MAX) : redacted;
+    };
+    let r = content;
+    r = r.replace(/Brandon Li/g, x);
+    r = r.replace(/978-245-5532/g, x);
+    r = r.replace(/jobs@brandonli\.me/g, x);
+    r = r.replace(/https:\/\/brandonli\.me/g, x);
+    r = r.replace(/brandonli\.me/g, x);
+    r = r.replace(/https:\/\/linkedin\.com\/in\/brandonli28/g, x);
+    r = r.replace(/linkedin\.com\/in\/brandonli28/g, x);
+    r = r.replace(/https:\/\/github\.com\/PulseBeat02\/yt-media-storage/g, x);
+    r = r.replace(/https:\/\/github\.com\/PulseBeat02\/mcav/g, x);
+    r = r.replace(/https:\/\/github\.com\/PulseBeat02\/video-player/g, x);
+    r = r.replace(/https:\/\/github\.com\/PulseBeat02/g, x);
+    r = r.replace(/github\.com\/PulseBeat02/g, x);
+    r = r.replace(/https:\/\/www\.youtube\.com\/watch\?v=l03Os5uwWmk/g, x);
+    r = r.replace(/Google \(YouTube\)/g, x);
+    r = r.replace(/VideoLAN/g, x);
+    r = r.replace(/yt-media-storage/g, x);
+    r = r.replace(/\{mcav\}/g, x);
+    r = r.replace(/Pulse Media Player/g, x);
+    return r;
+}
+
 async function resume() {
     const template = fs.readFileSync(TEX_PATH, "utf-8");
     const placeholders = await buildPlaceholders();
 
-    const content2027 = replacePlaceholders(template, {...placeholders, GRAD_YEAR: "2027"});
-    const content2028 = replacePlaceholders(template, {...placeholders, GRAD_YEAR: "2028"});
+    const content = replacePlaceholders(template, {...placeholders, GRAD_YEAR: "2028"});
+    await compile(content, PDF_PATH);
 
-    await compile(content2027, PDF_PATH);
     await new Promise(resolve => setTimeout(resolve, 3000));
-    await compile(content2028, PDF2_PATH);
+
+    const redactedContent = redactContent(content);
+    await compile(redactedContent, REDACTED_PDF_PATH);
 }
 
 await resume();
