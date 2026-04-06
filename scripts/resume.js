@@ -149,8 +149,8 @@ function redactContent(content) {
     r = r.replace(/https:\/\/github\.com\/PulseBeat02/g, x);
     r = r.replace(/github\.com\/PulseBeat02/g, x);
     r = r.replace(/https:\/\/www\.youtube\.com\/watch\?v=l03Os5uwWmk/g, x);
-    r = r.replace(/Google \(YouTube\)/g, x);
-    r = r.replace(/VideoLAN/g, x);
+    r = r.replace(/Halvex/g, x);
+    r = r.replace(/Chelmsford Chinese Language School/g, x);
     r = r.replace(/yt-media-storage/g, x);
     r = r.replace(/\{mcav\}/g, x);
     r = r.replace(/Pulse Media Player/g, x);
