@@ -71,13 +71,13 @@ export default function Contact() {
         <Grid sx={{maxWidth: '350px', width: '100%'}}>
             <SectionHeading number={1} text="Contact"/>
             <Grid>
-                <Typography variant="h3" fontWeight="bold">Brandon Li</Typography>
-                <Typography variant="h4" fontWeight="bold" sx={{fontSize: "1.25rem"}}>Software Engineer</Typography>
-                <Typography marginTop={3} variant="body1">
+                <Typography variant="h3">Brandon Li</Typography>
+                <Typography variant="h4" sx={{fontSize: "1.25rem"}}>Software Engineer</Typography>
+                <Typography sx={{marginTop: 1}} variant="body1">
                     I build fast, reliable open-source software that powers back end applications.
                 </Typography>
             </Grid>
-            <Grid container spacing={2} marginTop={5} sx={{maxWidth: '700px'}}>
+            <Grid container spacing={2} sx={{marginTop: 3, maxWidth: '700px'}}>
                 <SocialIcon Icon={GitHubIcon} href="https://github.com/PulseBeat02" label={"GitHub"}/>
                 <SocialIcon Icon={YouTubeIcon} href="https://www.youtube.com/@pulsebeat_02" label={"YouTube"}/>
                 <SocialIcon Icon={DiscordIcon} href="https://discord.gg/MgqRKvycMC" label={"Discord"}/>

@@ -17,7 +17,8 @@ const NumberAvatar = ({number}: { number: number }) => {
 
 export const SectionHeading = ({number, text}: { number: number; text: string }) => {
     return (
-        <Grid container direction="row" alignItems="center" spacing={2} sx={{
+        <Grid container direction="row" spacing={2} sx={{
+            alignItems: 'center',
             marginBottom: 3,
             borderRadius: 2,
             border: `1px solid #39FF14`,

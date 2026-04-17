@@ -78,7 +78,7 @@ export default function Experience() {
                         onMouseLeave={() => setHoveredIndex(null)}
                     >
                         <Grid>
-                            <Typography variant="h3" sx={{fontWeight: 'medium', fontSize: '1.25rem'}} fontWeight="bold">
+                            <Typography variant="h3" sx={{fontSize: '1.25rem'}}>
                                 {exp.link ? (
                                     <CustomLink href={exp.link}>{exp.company}</CustomLink>
                                 ) : (
@@ -88,7 +88,6 @@ export default function Experience() {
                             <Typography
                                 variant="h4"
                                 color="#cccccc"
-                                fontWeight="medium"
                                 sx={{fontSize: '1rem', marginTop: 0.75}}
                             >
                                 {exp.role}

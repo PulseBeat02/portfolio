@@ -56,17 +56,17 @@ export default function Home() {
                             </Box>
                         </Fade>
                         <Fade scrollTriggered delay={0.25}>
-                            <Box mt={12} ref={experienceRef} id="experience">
+                            <Box sx={{marginTop: 5}} ref={experienceRef} id="experience">
                                 <Experience/>
                             </Box>
                         </Fade>
                         <Fade scrollTriggered delay={0.1}>
-                            <Box mt={12} ref={projectsRef} id="projects">
+                            <Box sx={{marginTop: 5}} ref={projectsRef} id="projects">
                                 <Projects/>
                             </Box>
                         </Fade>
                         <Fade scrollTriggered delay={0.1}>
-                            <Box mt={12} ref={blogRef} id="blog">
+                            <Box sx={{marginTop: 6}} ref={blogRef} id="blog">
                                 <Blog/>
                             </Box>
                         </Fade>

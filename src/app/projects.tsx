@@ -66,7 +66,7 @@ export default function Projects() {
                     >
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                             <div style={{flex: '1', paddingRight: '16px'}}>
-                                <Typography fontWeight="bold" sx={{fontWeight: 'medium', fontSize: '1.25rem'}}>
+                                <Typography sx={{fontSize: '1.25rem'}}>
                                     {project.github ? (
                                         <CustomLink href={project.github}>{project.title}</CustomLink>
                                     ) : (
@@ -107,6 +107,7 @@ export default function Projects() {
                                     overflow: 'hidden'
                                 }}>
                                     <Image
+                                        loading="eager"
                                         src={project.thumbnail}
                                         alt={project.title}
                                         fill

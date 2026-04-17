@@ -82,13 +82,13 @@ export default function Navbar({aboutMeRef, experienceRef, projectsRef, blogRef}
     }, [aboutMeRef, experienceRef, projectsRef, blogRef]);
 
     return (
-        <Box mt={4} sx={{
+        <Box sx={{
             borderRadius: 3,
             bgcolor: 'background.paper',
             boxShadow: 2,
             p: 2
         }}>
-            <Stack spacing={2} alignItems="left">
+            <Stack spacing={2} sx={{alignItems: "left", marginTop: 3}}>
                 {renderNavButton('About Me', 'about', aboutMeRef)}
                 {renderNavButton('Experience', 'experience', experienceRef)}
                 {renderNavButton('Projects', 'projects', projectsRef)}
