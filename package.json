@@ -15,11 +15,11 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.6",
-    "@mui/icons-material": "^7.2.0",
-    "@mui/material": "^7.2.0",
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
     "gray-matter": "^4.0.3",
     "motion": "^12.23.3",
-    "next": "16.2.2",
+    "next": "16.2.4",
     "next-mdx-remote": "^6.0.0",
     "next-sitemap": "^4.2.3",
     "nextra": "^4.2.17",
@@ -36,7 +36,7 @@
     "@types/react-dom": "^19",
     "baseline-browser-mapping": "^2.9.19",
     "eslint": "^10.0.0",
-    "eslint-config-next": "16.2.2",
+    "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
     "typescript": "^6.0.0"
   }
