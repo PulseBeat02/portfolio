@@ -79,7 +79,6 @@ export default function Blog() {
                                         </Typography>
                                         <Typography
                                             variant="h5"
-                                            fontWeight="bold"
                                             gutterBottom
                                             sx={{cursor: 'pointer'}}
                                             onClick={() => openBlogModal(post)}
@@ -168,7 +167,7 @@ export default function Blog() {
                             <Typography variant="overline" color="#888888">
                                 {selectedPost.date} • {selectedPost.readingTime || '5 min read'}
                             </Typography>
-                            <Typography variant="h4" fontWeight="bold" gutterBottom color="#ffffff">
+                            <Typography variant="h4" gutterBottom color="#ffffff">
                                 {selectedPost.title}
                             </Typography>
 
