@@ -6,6 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEX_PATH = path.join(__dirname, "..", "public", "resume.tex");
 const PDF_PATH = path.join(__dirname, "..", "public", "resume.pdf");
 const REDACTED_PDF_PATH = path.join(__dirname, "..", "public", "redacted.pdf");
+const CACHE_PATH = path.join(__dirname, "resume-cache.json");
 
 const GITHUB_OWNER = "PulseBeat02";
 const YT_STORAGE_REPO = "yt-media-storage";
@@ -80,25 +81,51 @@ async function fetchYouTubeStats(videoId) {
     }
 }
 
+function loadCache() {
+    try {
+        return JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8"));
+    } catch {
+        return {};
+    }
+}
+
+function saveCache(cache) {
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2) + "\n");
+}
+
 async function buildPlaceholders() {
     const [ytStorage, mcav, youtube] = await Promise.all([
         fetchGitHubStats(GITHUB_OWNER, YT_STORAGE_REPO),
         fetchGitHubStats(GITHUB_OWNER, MCAV_REPO),
         fetchYouTubeStats(VIDEO_ID),
     ]);
+    const cache = loadCache();
+    if (ytStorage) cache.ytStorage = ytStorage;
+    if (mcav) cache.mcav = mcav;
+    if (youtube) cache.youtube = youtube;
+
     const placeholders = {};
-    if (ytStorage) {
-        placeholders.YT_STORAGE_STARS = formatGitHubStat(ytStorage.stars);
-        placeholders.YT_STORAGE_FORKS = formatGitHubStat(ytStorage.forks);
+    if (cache.ytStorage) {
+        placeholders.YT_STORAGE_STARS = formatGitHubStat(cache.ytStorage.stars);
+        placeholders.YT_STORAGE_FORKS = formatGitHubStat(cache.ytStorage.forks);
     }
-    if (mcav) {
-        placeholders.MCAV_STARS = formatGitHubStat(mcav.stars);
-        placeholders.MCAV_FORKS = formatGitHubStat(mcav.forks);
+    if (cache.mcav) {
+        placeholders.MCAV_STARS = formatGitHubStat(cache.mcav.stars);
+        placeholders.MCAV_FORKS = formatGitHubStat(cache.mcav.forks);
     }
-    if (youtube) {
-        placeholders.YT_VIEWERS = formatLargeNumber(youtube.views);
-        placeholders.YT_IMPRESSIONS = formatLargeNumber(youtube.views * IMPRESSIONS_MULTIPLIER, true);
+    if (cache.youtube) {
+        placeholders.YT_VIEWERS = formatLargeNumber(cache.youtube.views);
+        placeholders.YT_IMPRESSIONS = formatLargeNumber(cache.youtube.views * IMPRESSIONS_MULTIPLIER, true);
     }
+
+    const required = ["YT_STORAGE_STARS", "YT_STORAGE_FORKS", "MCAV_STARS", "MCAV_FORKS", "YT_VIEWERS", "YT_IMPRESSIONS"];
+    const missing = required.filter(k => !(k in placeholders));
+    if (missing.length > 0) {
+        console.error(`Missing placeholders with no cached fallback: ${missing.join(", ")}`);
+        process.exit(1);
+    }
+
+    saveCache(cache);
     return placeholders;
 }
 
@@ -107,8 +134,8 @@ function replacePlaceholders(content, placeholders) {
         if (key in placeholders) {
             return placeholders[key];
         }
-        console.warn(`Unknown placeholder: ${match}`);
-        return match;
+        console.error(`Unknown placeholder: ${match}`);
+        process.exit(1);
     });
 }
 
