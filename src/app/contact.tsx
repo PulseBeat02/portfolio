@@ -74,7 +74,7 @@ export default function Contact() {
                 <Typography variant="h3">Brandon Li</Typography>
                 <Typography variant="h4" sx={{fontSize: "1.25rem"}}>Software Engineer</Typography>
                 <Typography sx={{marginTop: 1}} variant="body1">
-                    I build fast, reliable open-source software that powers back end applications.
+                    I build unique, low-level projects never thought of before.
                 </Typography>
             </Grid>
             <Grid container spacing={2} sx={{marginTop: 3, maxWidth: '700px'}}>

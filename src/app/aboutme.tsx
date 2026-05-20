@@ -7,12 +7,12 @@ export default function AboutMe() {
             <SectionHeading number={2} text="About Me"/>
             <Stack spacing={2}>
                 <Typography variant="body1">
-                    I&apos;m a college sophomore from Boston passionate about developing high-end software
+                    I&apos;m a college sophomore from Boston passionate about developing low-level software
                     for the open-source
                     community. I currently study Computer Science at the {" "}
                     <CustomLink href="https://www.ucla.edu/">
                         University of California, Los Angeles
-                    </CustomLink>, where I&apos;m taking courses in data structures, algorithms, and systems. You may find me online as <Typography component="span" sx={{
+                    </CustomLink>. You may find me online as <Typography component="span" sx={{
                     fontFamily: 'monospace',
                     backgroundColor: 'rgba(0, 0, 0, 0.05)',
                     p: 0.5,
@@ -20,17 +20,16 @@ export default function AboutMe() {
                 }}>PulseBeat02</Typography>.
                 </Typography>
                 <Typography variant="body1">
-                    I contribute to bring new cool features to the multimedia ecosystem, like integrating computer
-                    vision and machine learning into media playback with
-                    {" "} <CustomLink href="https://github.com/facebookresearch/sam2">SAM2 </CustomLink> to segment
-                    objects and draw faces in real-time.
+                    I've worked on some cool stuff, like
+                    {" "} <CustomLink href="https://www.videolan.org/">VLC Media Player </CustomLink>
+                    (traffic cone), and some of my own open-source projects that dive deep into multimedia systems.
                 </Typography>
                 <Typography variant="body1">
                     In my spare time, I enjoy playing clarinet in my university orchestra and wind ensemble, and
-                    develop my own open-source projects. I also maintain a
+                    maintain my
                     {" "} <CustomLink href="https://www.youtube.com/@pulsebeat_02">YouTube channel</CustomLink>
                     , where I discuss some of
-                    my projects in further depth.
+                    my technical projects in further depth.
                 </Typography>
             </Stack>
         </Grid>

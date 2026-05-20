@@ -15,18 +15,26 @@ export default function Experience() {
     }
 
     const experiences: ExperienceItem[] = [
-        // {
-        //     company: "Google",
-        //     role: "Software Engineering Intern (Incoming)",
-        //     description: "Google (YouTube)",
-        //     period: "Jun 2026 - Sep 2026",
-        //     technologies: ["Java", "Android", "C++"],
-        //     link: "https://www.youtube.com/"
-        // },
+        {
+            company: "Google",
+            role: "Software Engineering Intern (Incoming)",
+            description: "YouTube Media Player (Summer 2026)",
+            period: "Jun 2026 - Sep 2026",
+            technologies: ["Java", "Android", "C++"],
+            link: "https://www.youtube.com/"
+        },
+        {
+            company: "Amazon",
+            role: "Software Development Engineering Internship (Incoming)",
+            description: "AWS Internal Tools (Fall 2026)",
+            period: "Sep 2026 - Dec 2026",
+            technologies: ["Java", "Python", "JavaScript"],
+            link: "https://aws.amazon.com/"
+        },
         {
             company: "VideoLAN",
             role: "Software Engineering Intern",
-            description: "VLC Media Player",
+            description: "Video Filters & Tooling (Summer 2025)",
             period: "Jun 2025 - Sep 2025",
             technologies: ["C", "C++", "OpenCV", "AI/ML", "Makefile", "Meson"],
             link: "https://www.videolan.org/"
@@ -34,19 +42,11 @@ export default function Experience() {
         {
             company: "Halvex",
             role: "Software Developer Intern",
-            description: "Linked Roles Discord Bot",
-            period: "Feb 2023 - June 2023",
+            description: "Backend Infrastructure (Spring 2023)",
+            period: "Jan 2023 - Apr 2023",
             technologies: ["JavaScript", "TypeScript", "Express.js", "Node.js", "MongoDB"],
             link: "https://halvex.net/"
-        },
-        {
-            company: "Chelmsford Chinese Language School",
-            role: "Java Mentor",
-            description: "Java Introduction Course Teacher",
-            period: "Sep 2021 - Feb 2022",
-            technologies: ["Java"],
-            link: "https://ccls-ma.org/"
-        },
+        }
     ];
 
     const ExperienceSection = () => {
@@ -123,8 +123,7 @@ export default function Experience() {
                         </Grid>
                     </Grid>
                 ))}
-
- {/*               <Button
+                <Button
                     endIcon={<OpenInNewIcon/>}
                     onClick={handleOpenResume}
                     sx={{
@@ -168,7 +167,7 @@ export default function Experience() {
                             title="Brandon Li's Resume"
                         />
                     </Box>
-                </Modal>*/}
+                </Modal>
             </Stack>
         );
     };

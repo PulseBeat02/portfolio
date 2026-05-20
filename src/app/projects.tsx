@@ -15,18 +15,18 @@ export default function Projects() {
 
     const projects: ProjectItem[] = [
         {
-            title: "mcav",
-            description: "A cross-platform Java multimedia framework (130 stars) for building Java media applications.",
-            thumbnail: "/mcav.webp",
-            technologies: ["Java", "Spring Boot", "TypeScript", "CI/CD"],
-            github: "https://github.com/PulseBeat02/mcav"
-        },
-        {
             title: "yt-media-storage",
-            description: "A tool to encode/decode files into YouTube videos. Check out the YouTube video linked.",
+            description: "A tool to encode/decode files into uploadable videos. Check out the YouTube video linked.",
             thumbnail: "/yt-media-storage.webp",
             technologies: ["C++", "Assembly", "SIMD", "Encryption", "Coding Theory", "Compression"],
             github: "https://github.com/PulseBeat02/yt-media-storage"
+        },
+        {
+            title: "mcav",
+            description: "An advanced Java multimedia framework for building Java media applications.",
+            thumbnail: "/mcav.webp",
+            technologies: ["Java", "Spring Boot", "TypeScript", "CI/CD"],
+            github: "https://github.com/PulseBeat02/mcav"
         },
         {
             title: "Pulse Media Player",
@@ -37,7 +37,7 @@ export default function Projects() {
         },
         {
             title: "Murder Run",
-            description: "A Bukkit gamemode for Minecraft servers with over 30k lines of code.",
+            description: "A Bukkit gamemode for Minecraft servers based on the game, Dead by Daylight.",
             thumbnail: "/murderrun.webp",
             technologies: ["Java", "Hibernate", "Bukkit"],
             github: "https://github.com/PulseBeat02/murderrun"
