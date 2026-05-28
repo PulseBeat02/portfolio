@@ -33,19 +33,19 @@ export default function Experience() {
         },
         {
             company: "VideoLAN",
+            role: "Open Source Contributer",
+            description: "Various Tweaks",
+            period: "Jan 2026 - Present",
+            technologies: ["C", "C++", "OpenCV", "AI/ML", "Makefile", "Meson"],
+            link: "https://www.videolan.org/"
+        },
+        {
+            company: "VideoLAN",
             role: "Software Engineering Intern",
             description: "Video Filters & Tooling (Summer 2025)",
             period: "Jun 2025 - Sep 2025",
             technologies: ["C", "C++", "OpenCV", "AI/ML", "Makefile", "Meson"],
             link: "https://www.videolan.org/"
-        },
-        {
-            company: "Halvex",
-            role: "Software Developer Intern",
-            description: "Backend Infrastructure (Spring 2023)",
-            period: "Jan 2023 - Apr 2023",
-            technologies: ["JavaScript", "TypeScript", "Express.js", "Node.js", "MongoDB"],
-            link: "https://halvex.net/"
         }
     ];
 

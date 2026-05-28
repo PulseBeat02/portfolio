@@ -20,7 +20,7 @@ export default function AboutMe() {
                 }}>PulseBeat02</Typography>.
                 </Typography>
                 <Typography variant="body1">
-                    I've worked on some cool stuff, like
+                    I currently work on some cool stuff, like
                     {" "} <CustomLink href="https://www.videolan.org/">VLC Media Player </CustomLink>
                     (traffic cone), and some of my own open-source projects that dive deep into multimedia systems.
                 </Typography>
