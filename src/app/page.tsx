@@ -5,7 +5,6 @@ import AboutMe from "@/app/aboutme";
 import Experience from "@/app/experience";
 import {Grid, Box, Typography} from "@mui/material";
 import Projects from "@/app/projects";
-import Blog from "@/app/blog";
 import React, {useRef} from "react";
 import Navbar from "@/app/navigation";
 import {Fade} from '@/app/fade'
@@ -15,7 +14,6 @@ export default function Home() {
     const aboutMeRef = useRef<HTMLDivElement>(null);
     const experienceRef = useRef<HTMLDivElement>(null);
     const projectsRef = useRef<HTMLDivElement>(null);
-    const blogRef = useRef<HTMLDivElement>(null);
     return (
         <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', p: 5, alignItems: 'center'}}>
             <Grid
@@ -42,7 +40,6 @@ export default function Home() {
                                     aboutMeRef={aboutMeRef as React.RefObject<HTMLDivElement>}
                                     experienceRef={experienceRef as React.RefObject<HTMLDivElement>}
                                     projectsRef={projectsRef as React.RefObject<HTMLDivElement>}
-                                    blogRef={blogRef as React.RefObject<HTMLDivElement>}
                                 />
                             </Fade>
                         </Box>
@@ -63,11 +60,6 @@ export default function Home() {
                         <Fade scrollTriggered delay={0.1}>
                             <Box sx={{marginTop: 5}} ref={projectsRef} id="projects">
                                 <Projects/>
-                            </Box>
-                        </Fade>
-                        <Fade scrollTriggered delay={0.1}>
-                            <Box sx={{marginTop: 6}} ref={blogRef} id="blog">
-                                <Blog/>
                             </Box>
                         </Fade>
                     </Box>

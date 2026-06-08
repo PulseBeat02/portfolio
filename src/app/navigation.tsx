@@ -7,10 +7,9 @@ interface NavbarProps {
     aboutMeRef: React.RefObject<HTMLDivElement>;
     experienceRef: React.RefObject<HTMLDivElement>;
     projectsRef: React.RefObject<HTMLDivElement>;
-    blogRef: React.RefObject<HTMLDivElement>;
 }
 
-export default function Navbar({aboutMeRef, experienceRef, projectsRef, blogRef}: NavbarProps) {
+export default function Navbar({aboutMeRef, experienceRef, projectsRef}: NavbarProps) {
 
     const [activeSection, setActiveSection] = useState<string>('about');
     const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
@@ -65,7 +64,6 @@ export default function Navbar({aboutMeRef, experienceRef, projectsRef, blogRef}
             const aboutPos = aboutMeRef.current?.getBoundingClientRect();
             const expPos = experienceRef.current?.getBoundingClientRect();
             const projPos = projectsRef.current?.getBoundingClientRect();
-            const blogPos = blogRef.current?.getBoundingClientRect();
             const threshold = 200;
             if (aboutPos && aboutPos.top < threshold && aboutPos.bottom > 0) {
                 setActiveSection('about');
@@ -73,13 +71,11 @@ export default function Navbar({aboutMeRef, experienceRef, projectsRef, blogRef}
                 setActiveSection('experience');
             } else if (projPos && projPos.top < threshold && projPos.bottom > 0) {
                 setActiveSection('projects');
-            } else if (blogPos && blogPos.top < threshold && blogPos.bottom > 0) {
-                setActiveSection('blog');
             }
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [aboutMeRef, experienceRef, projectsRef, blogRef]);
+    }, [aboutMeRef, experienceRef, projectsRef]);
 
     return (
         <Box sx={{
@@ -92,7 +88,6 @@ export default function Navbar({aboutMeRef, experienceRef, projectsRef, blogRef}
                 {renderNavButton('About Me', 'about', aboutMeRef)}
                 {renderNavButton('Experience', 'experience', experienceRef)}
                 {renderNavButton('Projects', 'projects', projectsRef)}
-                {renderNavButton('Blog', 'blog', blogRef)}
             </Stack>
         </Box>
     );
