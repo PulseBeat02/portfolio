@@ -17,8 +17,8 @@ export default function Experience() {
     const experiences: ExperienceItem[] = [
         {
             company: "Google",
-            role: "Software Engineering Intern (Incoming)",
-            description: "YouTube Media Player (Summer 2026)",
+            role: "Software Engineering Intern",
+            description: "YouTube Android Media Player, AV1 (Summer 2026)",
             period: "Jun 2026 - Sep 2026",
             technologies: ["Java", "Android", "C++"],
             link: "https://www.youtube.com/"
