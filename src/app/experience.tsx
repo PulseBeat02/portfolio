@@ -16,20 +16,20 @@ export default function Experience() {
 
     const experiences: ExperienceItem[] = [
         {
+            company: "Amazon",
+            role: "Software Development Engineering Intern (Incoming)",
+            description: "AWS Internal Tools (Fall 2026)",
+            period: "Sep 2026 - Dec 2026",
+            technologies: ["Java", "Python", "JavaScript"],
+            link: "https://aws.amazon.com/"
+        },
+        {
             company: "Google",
             role: "Software Engineering Intern",
             description: "YouTube Android Media Player, AV1 (Summer 2026)",
             period: "Jun 2026 - Sep 2026",
             technologies: ["Java", "Android", "C++"],
             link: "https://www.youtube.com/"
-        },
-        {
-            company: "Amazon",
-            role: "Software Development Engineering Internship (Incoming)",
-            description: "AWS Internal Tools (Fall 2026)",
-            period: "Sep 2026 - Dec 2026",
-            technologies: ["Java", "Python", "JavaScript"],
-            link: "https://aws.amazon.com/"
         },
         {
             company: "VideoLAN",
