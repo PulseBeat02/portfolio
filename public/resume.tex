@@ -150,7 +150,7 @@
     {Google (YouTube)}{San Bruno, CA}
     \resumeItemListStart
     \resumeItem{Engineered 10-bit software AV1 HDR video playback for the YouTube Android app via low-level ARM/NEON SIMD vectorization in C++ to improve the video quality and playback performance for millions of users.}
-    \resumeItem{Reduced CPU utilization by 50\% on 1080p HDR playback under dav1d software decoding, establishing dynamic resolution thresholds that adapt to device thermal and battery state to conserve power on Android devices.}
+    \resumeItem{Defined per-device video resolution caps (e.g. 1080p) for dav1d software decoding, filtering higher resolution formats out of the playback selection to prevent thermal throttling and battery drain on lower-end devices.}
     \resumeItem{Built a Java-based shader effect debug UI and OpenGL video pipeline to accelerate developer iteration speed.}
     \resumeItem{Integrated custom fragment shaders to allow video effects across thousands of DRM-protected shows and movies.}
     \resumeItem{Resolved memory leaks, migrated deprecated code, and improved format filtering across ExoPlayer and YouTube.}
