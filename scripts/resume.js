@@ -29,8 +29,8 @@ function formatLargeNumber(n, decimal = false) {
     return n.toString();
 }
 
-function fetchWithTimeout(url, init = {}) {
-    return fetch(url, {...init, signal: AbortSignal.timeout(fetchTimeoutMs)});
+function fetchWithTimeout(url, init = {}, timeoutMs = fetchTimeoutMs) {
+    return fetch(url, {...init, signal: AbortSignal.timeout(timeoutMs)});
 }
 
 async function fetchGitHubStats(owner, repo) {
@@ -136,13 +136,19 @@ function isRetryable(status) {
 
 async function compile(content, label) {
     for (let attempt = 1; ; attempt++) {
-        let response;
+        let status;
+        let error;
         try {
-            response = await fetchWithTimeout(latex.compileUrl, {
+            const response = await fetchWithTimeout(latex.compileUrl, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({compiler: latex.compiler, resources: [{main: true, content}]}),
-            });
+            }, latex.timeoutMs);
+            status = response.status;
+            if (response.ok) {
+                return Buffer.from(await response.arrayBuffer());
+            }
+            error = await response.text();
         } catch (e) {
             if (attempt >= latex.maxAttempts) throw e;
             console.warn(`Compile request for ${label} failed (${e.message}), retrying...`);
@@ -150,16 +156,12 @@ async function compile(content, label) {
             continue;
         }
 
-        if (response.ok) {
-            return Buffer.from(await response.arrayBuffer());
-        }
-        const error = await response.text();
-        if (isRetryable(response.status) && attempt < latex.maxAttempts) {
-            console.warn(`Compile service returned ${response.status} for ${label}, retrying...`);
+        if (isRetryable(status) && attempt < latex.maxAttempts) {
+            console.warn(`Compile service returned ${status} for ${label}, retrying...`);
             await sleep(latex.retryDelayMs * attempt);
             continue;
         }
-        throw new Error(`Resume compilation failed for ${label} (${response.status}):\n${error}`);
+        throw new Error(`Resume compilation failed for ${label} (${status}):\n${error}`);
     }
 }
 

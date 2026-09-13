@@ -31,13 +31,20 @@ jobs:
 
       - name: Commit and push if changed
         run: |
-          git add public/resume.pdf public/redacted.pdf scripts/resume-cache.json
+          git add public/resume.pdf public/redacted.pdf
           git diff --cached --quiet && exit 0
+          git add scripts/resume-cache.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "Updated resume"
           for i in 1 2 3; do
-            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
+            if git pull --rebase origin "${GITHUB_REF_NAME}"; then
+              git push && exit 0
+            elif [ -d "$(git rev-parse --git-path rebase-merge)" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ]; then
+              git rebase --abort
+              echo "::error::Resume commit conflicts with ${GITHUB_REF_NAME}; it will be regenerated on the next run."
+              exit 1
+            fi
             sleep 5
           done
           exit 1

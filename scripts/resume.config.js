@@ -28,6 +28,7 @@ export const latex = {
     compiler: "pdflatex",
     maxAttempts: 4,
     retryDelayMs: 3000,
+    timeoutMs: 120_000,
 };
 
 export const fetchTimeoutMs = 30_000;
