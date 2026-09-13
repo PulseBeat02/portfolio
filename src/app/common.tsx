@@ -1,4 +1,4 @@
-import {Grid, Typography, Avatar, Link} from '@mui/material';
+import {Grid, Typography, Avatar, Link, Stack} from '@mui/material';
 import React from "react";
 
 const NumberAvatar = ({number}: { number: number }) => {
@@ -43,27 +43,27 @@ interface CustomLinkProps {
     variant?: 'default' | 'subtle';
 }
 
-export const CustomLink = ({href, children, isExternal = true, variant = 'default'}: CustomLinkProps) => {
-    const styles = {
-        default: {
-            fontWeight: 'bold',
-            color: 'white',
-            textDecoration: 'none',
-            transition: 'color 0.3s'
-        },
-        subtle: {
-            fontWeight: 'bold',
-            color: '#cccccc',
-            textDecoration: 'underline',
-            transition: 'color 0.3s'
-        }
-    };
+const LINK_STYLES = {
+    default: {
+        fontWeight: 'bold',
+        color: 'white',
+        textDecoration: 'none',
+        transition: 'color 0.3s'
+    },
+    subtle: {
+        fontWeight: 'bold',
+        color: '#cccccc',
+        textDecoration: 'underline',
+        transition: 'color 0.3s'
+    }
+} as const;
 
+export const CustomLink = ({href, children, isExternal = true, variant = 'default'}: CustomLinkProps) => {
     return (
         <Link
             href={href}
             sx={{
-                ...styles[variant],
+                ...LINK_STYLES[variant],
                 '&:hover': {color: '#39FF14'}
             }}
             {...(isExternal ? {target: "_blank", rel: "noopener noreferrer"} : {})}
@@ -72,3 +72,31 @@ export const CustomLink = ({href, children, isExternal = true, variant = 'defaul
         </Link>
     );
 };
+
+export const dimSiblingsOnHover = {
+    '& > *:hover ~ *, & > *:has(~ *:hover)': {
+        filter: 'blur(2px)',
+        opacity: 0.7,
+    },
+} as const;
+
+export const TechChips = ({items, mt = 1}: { items: string[]; mt?: number }) => (
+    <Stack direction="row" sx={{mt, flexWrap: 'wrap', gap: 0.5}}>
+        {items.map((tech) => (
+            <Typography
+                key={tech}
+                variant="caption"
+                sx={{
+                    bgcolor: 'rgba(57, 255, 20, 0.1)',
+                    color: '#39FF14',
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: 1,
+                    display: 'inline-block'
+                }}
+            >
+                {tech}
+            </Typography>
+        ))}
+    </Stack>
+);

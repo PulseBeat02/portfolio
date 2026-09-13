@@ -37,9 +37,9 @@ export default function Home() {
                         <Box sx={{display: {xs: 'none', sm: 'none', md: 'block'}}}>
                             <Fade delay={0.4}>
                                 <Navbar
-                                    aboutMeRef={aboutMeRef as React.RefObject<HTMLDivElement>}
-                                    experienceRef={experienceRef as React.RefObject<HTMLDivElement>}
-                                    projectsRef={projectsRef as React.RefObject<HTMLDivElement>}
+                                    aboutMeRef={aboutMeRef}
+                                    experienceRef={experienceRef}
+                                    projectsRef={projectsRef}
                                 />
                             </Fade>
                         </Box>

@@ -1,17 +1,12 @@
-import {createTheme} from '@mui/material/styles';
-import {Inter} from 'next/font/google';
+"use client";
 
-export const inter = Inter({
-    subsets: ['latin'],
-    display: 'swap',
-});
+import {createTheme} from '@mui/material/styles';
 
 const theme = createTheme({
     typography: {
-        fontFamily: inter.style.fontFamily,
+        fontFamily: 'var(--font-inter), system-ui, sans-serif',
         body1: {color: '#888999'},
         body2: {color: '#888999'},
-        fontWeightBold: {color: "#ffffff"},
         h1: {color: '#ffffff'},
         h2: {color: '#ffffff'},
         h3: {color: '#ffffff'},

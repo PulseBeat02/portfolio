@@ -1,22 +1,9 @@
 import fs from "fs";
-import {fileURLToPath} from "url";
-import path from "path";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TEX_PATH = path.join(__dirname, "..", "public", "resume.tex");
-const PDF_PATH = path.join(__dirname, "..", "public", "resume.pdf");
-const REDACTED_PDF_PATH = path.join(__dirname, "..", "public", "redacted.pdf");
-const CACHE_PATH = path.join(__dirname, "resume-cache.json");
-
-const GITHUB_OWNER = "PulseBeat02";
-const YT_STORAGE_REPO = "yt-media-storage";
-const MCAV_REPO = "mcav";
-const VIDEO_ID = "l03Os5uwWmk";
-
-const GITHUB_API_URL = "https://api.github.com/repos";
-const YOUTUBE_DATA_API_URL = "https://www.googleapis.com/youtube/v3/videos";
-const LATEX_COMPILE_URL = "https://latex.ytotech.com/builds/sync";
-const IMPRESSIONS_MULTIPLIER = 12;
+import {setTimeout as sleep} from "timers/promises";
+import {
+    paths, github, youtube, latex, fetchTimeoutMs,
+    staticPlaceholders, requiredPlaceholders, redactionPatterns, redactionMaxLength,
+} from "./resume.config.js";
 
 function formatGitHubStat(n) {
     const remainder = n % 10;
@@ -42,11 +29,17 @@ function formatLargeNumber(n, decimal = false) {
     return n.toString();
 }
 
+function fetchWithTimeout(url, init = {}) {
+    return fetch(url, {...init, signal: AbortSignal.timeout(fetchTimeoutMs)});
+}
+
 async function fetchGitHubStats(owner, repo) {
+    const headers = {"User-Agent": "resume-compiler", Accept: "application/vnd.github+json"};
+    if (process.env.GITHUB_TOKEN) {
+        headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    }
     try {
-        const res = await fetch(`${GITHUB_API_URL}/${owner}/${repo}`, {
-            headers: {"User-Agent": "resume-compiler"},
-        });
+        const res = await fetchWithTimeout(`${github.apiUrl}/${owner}/${repo}`, {headers});
         if (!res.ok) {
             console.warn(`GitHub API error for ${owner}/${repo}: ${res.status}`);
             return null;
@@ -66,15 +59,16 @@ async function fetchYouTubeStats(videoId) {
         return null;
     }
     try {
-        const url = `${YOUTUBE_DATA_API_URL}?part=statistics&id=${videoId}&key=${apiKey}`;
-        const res = await fetch(url);
+        const params = new URLSearchParams({part: "statistics", id: videoId, key: apiKey});
+        const res = await fetchWithTimeout(`${youtube.apiUrl}?${params}`);
         if (!res.ok) {
             console.warn(`YouTube API error: ${res.status}`);
             return null;
         }
         const data = await res.json();
-        if (!data.items?.[0]) return null;
-        return {views: parseInt(data.items[0].statistics.viewCount, 10)};
+        const viewCount = data.items?.[0]?.statistics?.viewCount;
+        if (viewCount === undefined) return null;
+        return {views: parseInt(viewCount, 10)};
     } catch (e) {
         console.warn("Failed to fetch YouTube stats:", e.message);
         return null;
@@ -83,28 +77,28 @@ async function fetchYouTubeStats(videoId) {
 
 function loadCache() {
     try {
-        return JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8"));
+        return JSON.parse(fs.readFileSync(paths.cache, "utf-8"));
     } catch {
         return {};
     }
 }
 
 function saveCache(cache) {
-    fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2) + "\n");
+    fs.writeFileSync(paths.cache, JSON.stringify(cache, null, 2) + "\n");
 }
 
 async function buildPlaceholders() {
-    const [ytStorage, mcav, youtube] = await Promise.all([
-        fetchGitHubStats(GITHUB_OWNER, YT_STORAGE_REPO),
-        fetchGitHubStats(GITHUB_OWNER, MCAV_REPO),
-        fetchYouTubeStats(VIDEO_ID),
+    const [ytStorage, mcav, yt] = await Promise.all([
+        fetchGitHubStats(github.owner, github.ytStorageRepo),
+        fetchGitHubStats(github.owner, github.mcavRepo),
+        fetchYouTubeStats(youtube.videoId),
     ]);
     const cache = loadCache();
     if (ytStorage) cache.ytStorage = ytStorage;
     if (mcav) cache.mcav = mcav;
-    if (youtube) cache.youtube = youtube;
+    if (yt) cache.youtube = yt;
 
-    const placeholders = {};
+    const placeholders = {...staticPlaceholders};
     if (cache.ytStorage) {
         placeholders.YT_STORAGE_STARS = formatGitHubStat(cache.ytStorage.stars);
         placeholders.YT_STORAGE_FORKS = formatGitHubStat(cache.ytStorage.forks);
@@ -115,14 +109,12 @@ async function buildPlaceholders() {
     }
     if (cache.youtube) {
         placeholders.YT_VIEWERS = formatLargeNumber(cache.youtube.views);
-        placeholders.YT_IMPRESSIONS = formatLargeNumber(cache.youtube.views * IMPRESSIONS_MULTIPLIER, true);
+        placeholders.YT_IMPRESSIONS = formatLargeNumber(cache.youtube.views * youtube.impressionsMultiplier, true);
     }
 
-    const required = ["YT_STORAGE_STARS", "YT_STORAGE_FORKS", "MCAV_STARS", "MCAV_FORKS", "YT_VIEWERS", "YT_IMPRESSIONS"];
-    const missing = required.filter(k => !(k in placeholders));
+    const missing = requiredPlaceholders.filter(k => !(k in placeholders));
     if (missing.length > 0) {
-        console.error(`Missing placeholders with no cached fallback: ${missing.join(", ")}`);
-        process.exit(1);
+        throw new Error(`Missing placeholders with no cached fallback: ${missing.join(", ")}`);
     }
 
     saveCache(cache);
@@ -131,70 +123,67 @@ async function buildPlaceholders() {
 
 function replacePlaceholders(content, placeholders) {
     return content.replace(/\{\{(\w+)}}/g, (match, key) => {
-        if (key in placeholders) {
-            return placeholders[key];
+        if (!(key in placeholders)) {
+            throw new Error(`Unknown placeholder: ${match}`);
         }
-        console.error(`Unknown placeholder: ${match}`);
-        process.exit(1);
+        return placeholders[key];
     });
 }
 
-async function compile(content, outputPath) {
-    const response = await fetch(LATEX_COMPILE_URL, {
-        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
-            compiler: "pdflatex", resources: [{main: true, content}],
-        }),
-    });
+function isRetryable(status) {
+    return status === 429 || status >= 500;
+}
 
-    if (!response.ok) {
+async function compile(content, label) {
+    for (let attempt = 1; ; attempt++) {
+        let response;
+        try {
+            response = await fetchWithTimeout(latex.compileUrl, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({compiler: latex.compiler, resources: [{main: true, content}]}),
+            });
+        } catch (e) {
+            if (attempt >= latex.maxAttempts) throw e;
+            console.warn(`Compile request for ${label} failed (${e.message}), retrying...`);
+            await sleep(latex.retryDelayMs * attempt);
+            continue;
+        }
+
+        if (response.ok) {
+            return Buffer.from(await response.arrayBuffer());
+        }
         const error = await response.text();
-        console.error(`Resume compilation failed for ${outputPath}:\n`, error);
-        process.exit(1);
+        if (isRetryable(response.status) && attempt < latex.maxAttempts) {
+            console.warn(`Compile service returned ${response.status} for ${label}, retrying...`);
+            await sleep(latex.retryDelayMs * attempt);
+            continue;
+        }
+        throw new Error(`Resume compilation failed for ${label} (${response.status}):\n${error}`);
     }
-
-    const buffer = Buffer.from(await response.arrayBuffer());
-    fs.writeFileSync(outputPath, buffer);
 }
 
 function redactContent(content) {
-    const MAX = 12;
     const x = (s) => {
         const redacted = s.replace(/[a-zA-Z0-9]/g, "X");
-        return redacted.length > MAX ? "X".repeat(MAX) : redacted;
+        return redacted.length > redactionMaxLength ? "X".repeat(redactionMaxLength) : redacted;
     };
-    let r = content;
-    r = r.replace(/Brandon Li/g, x);
-    r = r.replace(/978-245-5532/g, x);
-    r = r.replace(/jobs@brandonli\.me/g, x);
-    r = r.replace(/https:\/\/brandonli\.me/g, x);
-    r = r.replace(/brandonli\.me/g, x);
-    r = r.replace(/https:\/\/linkedin\.com\/in\/brandonli28/g, x);
-    r = r.replace(/linkedin\.com\/in\/brandonli28/g, x);
-    r = r.replace(/https:\/\/github\.com\/PulseBeat02\/yt-media-storage/g, x);
-    r = r.replace(/https:\/\/github\.com\/PulseBeat02\/mcav/g, x);
-    r = r.replace(/https:\/\/github\.com\/PulseBeat02\/video-player/g, x);
-    r = r.replace(/https:\/\/github\.com\/PulseBeat02/g, x);
-    r = r.replace(/github\.com\/PulseBeat02/g, x);
-    r = r.replace(/https:\/\/www\.youtube\.com\/watch\?v=l03Os5uwWmk/g, x);
-    r = r.replace(/VideoLAN/g, x);
-    r = r.replace(/Chelmsford Chinese Language School/g, x);
-    r = r.replace(/yt-media-storage/g, x);
-    r = r.replace(/\{mcav\}/g, x);
-    r = r.replace(/Pulse Media Player/g, x);
-    return r;
+    return redactionPatterns.reduce((r, pattern) => r.replace(pattern, x), content);
 }
 
 async function resume() {
-    const template = fs.readFileSync(TEX_PATH, "utf-8");
+    const template = fs.readFileSync(paths.template, "utf-8");
     const placeholders = await buildPlaceholders();
-
-    const content = replacePlaceholders(template, {...placeholders, GRAD_YEAR: "2028"});
-    await compile(content, PDF_PATH);
-
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    const redactedContent = redactContent(content);
-    await compile(redactedContent, REDACTED_PDF_PATH);
+    const content = replacePlaceholders(template, placeholders);
+    const pdf = await compile(content, "resume.pdf");
+    const redactedPdf = await compile(redactContent(content), "redacted.pdf");
+    fs.writeFileSync(paths.pdf, pdf);
+    fs.writeFileSync(paths.redactedPdf, redactedPdf);
 }
 
-await resume();
+try {
+    await resume();
+} catch (e) {
+    console.error(e.message);
+    process.exit(1);
+}

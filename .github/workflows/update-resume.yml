@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-resume
+  cancel-in-progress: false
+
 jobs:
   update-resume:
     runs-on: ubuntu-latest
@@ -19,18 +23,21 @@ jobs:
         with:
           node-version: 24
 
-      - run: npm ci
-
       - name: Compile resume
         run: npm run compile-resume
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push if changed
         run: |
-          git diff --quiet && exit 0
+          git add public/resume.pdf public/redacted.pdf scripts/resume-cache.json
+          git diff --cached --quiet && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/resume.pdf public/redacted.pdf
           git commit -m "Updated resume"
-          git push
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
+            sleep 5
+          done
+          exit 1
