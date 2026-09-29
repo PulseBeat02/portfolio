@@ -15,7 +15,7 @@ export default function Home() {
     const experienceRef = useRef<HTMLDivElement>(null);
     const projectsRef = useRef<HTMLDivElement>(null);
     return (
-        <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', p: 5, alignItems: 'center'}}>
+        <Box component="main" sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', p: 5, alignItems: 'center'}}>
             <Grid
                 container
                 spacing={15}
@@ -47,30 +47,30 @@ export default function Home() {
                 </Grid>
                 <Grid>
                     <Box>
-                        <Fade scrollTriggered delay={0.25}>
-                            <Box ref={aboutMeRef} id="about">
+                        <Box ref={aboutMeRef} id="about" tabIndex={-1} sx={{outline: 'none'}}>
+                            <Fade scrollTriggered delay={0.25}>
                                 <AboutMe/>
-                            </Box>
-                        </Fade>
-                        <Fade scrollTriggered delay={0.25}>
-                            <Box sx={{marginTop: 5}} ref={experienceRef} id="experience">
+                            </Fade>
+                        </Box>
+                        <Box sx={{marginTop: 5, outline: 'none'}} ref={experienceRef} id="experience" tabIndex={-1}>
+                            <Fade scrollTriggered delay={0.25}>
                                 <Experience/>
-                            </Box>
-                        </Fade>
-                        <Fade scrollTriggered delay={0.1}>
-                            <Box sx={{marginTop: 5}} ref={projectsRef} id="projects">
+                            </Fade>
+                        </Box>
+                        <Box sx={{marginTop: 5, outline: 'none'}} ref={projectsRef} id="projects" tabIndex={-1}>
+                            <Fade scrollTriggered delay={0.1}>
                                 <Projects/>
-                            </Box>
-                        </Fade>
+                            </Fade>
+                        </Box>
                     </Box>
                     <Fade scrollTriggered>
-                        <Box sx={{
+                        <Box component="footer" sx={{
                             width: '100%',
                             py: 4,
                             mt: 6,
                             maxWidth: '350px'
                         }}>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" sx={{color: 'text.secondary'}}>
                                 Designed with 🧠, developed using <CustomLink
                                 href="https://www.jetbrains.com/webstorm/">WebStorm IDE</CustomLink>.
                                 Built using <CustomLink

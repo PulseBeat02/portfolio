@@ -1,9 +1,10 @@
 "use client";
 
-import {Button, Grid, Stack, Typography, Modal, Box} from "@mui/material";
+import {Button, Grid, Stack, Typography, Modal, Box, IconButton} from "@mui/material";
 import {CustomLink, SectionHeading, TechChips, dimSiblingsOnHover} from "@/app/common";
 import {useState} from "react";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import CloseIcon from '@mui/icons-material/Close';
 import {experiences, type ExperienceItem} from "@/data/experience";
 
 function ExperienceCard({exp}: { exp: ExperienceItem }) {
@@ -27,7 +28,7 @@ function ExperienceCard({exp}: { exp: ExperienceItem }) {
                 <Typography variant="h3" sx={{fontSize: '1.25rem'}}>
                     {exp.link ? <CustomLink href={exp.link}>{exp.company}</CustomLink> : exp.company}
                 </Typography>
-                <Typography variant="h4" color="#cccccc" sx={{fontSize: '1rem', marginTop: 0.75}}>
+                <Typography variant="h4" sx={{color: '#cccccc', fontSize: '1rem', marginTop: 0.75}}>
                     {exp.role}
                 </Typography>
                 <Typography variant="body2" sx={{marginTop: 1}}>
@@ -36,7 +37,7 @@ function ExperienceCard({exp}: { exp: ExperienceItem }) {
                 {exp.technologies && <TechChips items={exp.technologies}/>}
             </Grid>
             <Grid sx={{textAlign: 'left', marginTop: 1}}>
-                <Typography variant="body2" color="#888888">
+                <Typography variant="body2" sx={{color: '#888888'}}>
                     {exp.period}
                 </Typography>
             </Grid>
@@ -68,10 +69,8 @@ function ResumeButton() {
             <Modal
                 open={open}
                 onClose={() => setOpen(false)}
-                aria-labelledby="resume-modal"
-                aria-describedby="full-resume-view"
             >
-                <Box sx={{
+                <Box role="dialog" aria-modal="true" aria-label="Brandon Li's Resume" sx={{
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
@@ -84,11 +83,18 @@ function ResumeButton() {
                     p: 1,
                     borderRadius: 2,
                     outline: 'none',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
                 }}>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <IconButton aria-label="Close resume" size="small" onClick={() => setOpen(false)}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
                     <iframe
                         src="/resume.pdf"
-                        style={{width: '100%', height: '100%', border: 'none'}}
+                        style={{width: '100%', flex: 1, border: 'none'}}
                         title="Brandon Li's Resume"
                     />
                 </Box>

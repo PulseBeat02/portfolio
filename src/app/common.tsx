@@ -30,7 +30,7 @@ export const SectionHeading = ({number, text}: { number: number; text: string })
                 <NumberAvatar number={number}/>
             </Grid>
             <Grid>
-                <Typography sx={{color: 'white', fontWeight: 'medium', fontSize: '1rem'}}>{text}</Typography>
+                <Typography component="h2" sx={{color: 'white', fontWeight: 'medium', fontSize: '1rem'}}>{text}</Typography>
             </Grid>
         </Grid>
     );
@@ -74,9 +74,11 @@ export const CustomLink = ({href, children, isExternal = true, variant = 'defaul
 };
 
 export const dimSiblingsOnHover = {
-    '& > *:hover ~ *, & > *:has(~ *:hover)': {
-        filter: 'blur(2px)',
-        opacity: 0.7,
+    '@media (hover: hover)': {
+        '& > *:hover ~ *, & > *:has(~ *:hover)': {
+            filter: 'blur(2px)',
+            opacity: 0.7,
+        },
     },
 } as const;
 

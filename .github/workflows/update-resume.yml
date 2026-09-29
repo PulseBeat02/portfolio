@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - public/resume.tex
+      - scripts/resume.js
+      - scripts/resume.config.js
 
 permissions:
   contents: write

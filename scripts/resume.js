@@ -6,25 +6,27 @@ import {
 } from "./resume.config.js";
 
 function formatGitHubStat(n) {
-    const remainder = n % 10;
-    if (remainder === 0) {
+    if (n < 10 || n % 10 === 0) {
         return n.toString();
     }
-    if (remainder < 5) {
-        return `${Math.floor(n / 10) * 10}+`;
-    }
-    return `${Math.ceil(n / 10) * 10}`;
+    return `${Math.floor(n / 10) * 10}+`;
+}
+
+// Always rounds down, since the resume presents these as "over N".
+function floorToFixed(n, digits) {
+    const factor = 10 ** digits;
+    return (Math.floor(n * factor) / factor).toFixed(digits);
 }
 
 function formatLargeNumber(n, decimal = false) {
     if (n >= 1_000_000) {
-        return decimal ? `${(n / 1_000_000).toFixed(1)}M` : `${Math.floor(n / 1_000_000)}M`;
+        return decimal ? `${floorToFixed(n / 1_000_000, 1)}M` : `${Math.floor(n / 1_000_000)}M`;
     }
     if (n >= 100_000) {
-        return decimal ? `${(n / 1_000_000).toFixed(1)}M` : `${Math.floor(n / 10_000) * 10}k`;
+        return `${Math.floor(n / 10_000) * 10}k`;
     }
     if (n >= 10_000) {
-        return decimal ? `${(n / 1_000).toFixed(1)}k` : `${Math.floor(n / 1_000)}k`;
+        return decimal ? `${floorToFixed(n / 1_000, 1)}k` : `${Math.floor(n / 1_000)}k`;
     }
     return n.toString();
 }
@@ -62,7 +64,7 @@ async function fetchYouTubeStats(videoId) {
         const params = new URLSearchParams({part: "statistics", id: videoId, key: apiKey});
         const res = await fetchWithTimeout(`${youtube.apiUrl}?${params}`);
         if (!res.ok) {
-            console.warn(`YouTube API error: ${res.status}`);
+            console.warn(`YouTube API error: ${res.status} ${await res.text()}`);
             return null;
         }
         const data = await res.json();
@@ -170,7 +172,9 @@ function redactContent(content) {
         const redacted = s.replace(/[a-zA-Z0-9]/g, "X");
         return redacted.length > redactionMaxLength ? "X".repeat(redactionMaxLength) : redacted;
     };
-    return redactionPatterns.reduce((r, pattern) => r.replace(pattern, x), content);
+    const redacted = redactionPatterns.reduce((r, pattern) => r.replace(pattern, x), content);
+    // Redacted URLs are not valid link targets, so render links as plain underlined text.
+    return redacted.replace("\\begin{document}", "\\renewcommand{\\href}[2]{\\uline{#2}}\n\\begin{document}");
 }
 
 async function resume() {

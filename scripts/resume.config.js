@@ -62,7 +62,7 @@ export const redactionPatterns = [
     /yt-media-storage/g,
     /\{mcav\}/g,
     /Pulse Media Player/g,
-    /VLC/g,
+    /\bVLC\b/g,
 ];
 
 export const redactionMaxLength = 12;

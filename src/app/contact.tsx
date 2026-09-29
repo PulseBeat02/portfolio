@@ -30,8 +30,8 @@ export default function Contact() {
         <Grid sx={{maxWidth: '350px', width: '100%'}}>
             <SectionHeading number={1} text="Contact"/>
             <Grid>
-                <Typography variant="h3">{profile.name}</Typography>
-                <Typography variant="h4" sx={{fontSize: "1.25rem"}}>{profile.title}</Typography>
+                <Typography variant="h3" component="h1">{profile.name}</Typography>
+                <Typography variant="h4" component="p" sx={{fontSize: "1.25rem"}}>{profile.title}</Typography>
                 <Typography sx={{marginTop: 1}} variant="body1">
                     {profile.tagline}
                 </Typography>

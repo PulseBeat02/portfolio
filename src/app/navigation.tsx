@@ -19,10 +19,12 @@ function scrollToSection(ref: SectionRef) {
     const el = ref.current;
     if (!el) return;
     const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({
         top: el.getBoundingClientRect().top + window.scrollY - 2 * rootFontSize,
-        behavior: 'smooth',
+        behavior: reduceMotion ? 'auto' : 'smooth',
     });
+    el.focus({preventScroll: true});
 }
 
 export default function Navbar({aboutMeRef, experienceRef, projectsRef}: NavbarProps) {
@@ -37,6 +39,11 @@ export default function Navbar({aboutMeRef, experienceRef, projectsRef}: NavbarP
         let frame = 0;
         const update = () => {
             frame = 0;
+            const doc = document.documentElement;
+            if (window.scrollY > 0 && window.innerHeight + window.scrollY >= doc.scrollHeight - 2) {
+                setActiveSection('projects');
+                return;
+            }
             for (const [id, ref] of sections) {
                 const rect = ref.current?.getBoundingClientRect();
                 if (rect && rect.top < ACTIVE_THRESHOLD && rect.bottom > 0) {
@@ -92,7 +99,7 @@ export default function Navbar({aboutMeRef, experienceRef, projectsRef}: NavbarP
     };
 
     return (
-        <Box sx={{
+        <Box component="nav" aria-label="Sections" sx={{
             borderRadius: 3,
             bgcolor: 'background.paper',
             boxShadow: 2,

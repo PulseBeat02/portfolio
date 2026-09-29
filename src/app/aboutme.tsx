@@ -14,7 +14,7 @@ export default function AboutMe() {
                         University of California, Los Angeles
                     </CustomLink>. You may find me online as <Typography component="span" sx={{
                     fontFamily: 'monospace',
-                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
                     p: 0.5,
                     borderRadius: 1
                 }}>PulseBeat02</Typography>.

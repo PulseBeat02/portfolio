@@ -15,10 +15,10 @@ export const metadata: Metadata = {
         template: "%s | Brandon Li",
         default: "Brandon Li",
     },
-    description: "Brandon Li's (PulseBeat02) portfolio showcasing projects, skills, and blog posts.",
-    keywords: ['developer', 'software-engineer', 'portfolio', 'projects', 'blog', 'experience', 'PulseBeat02'],
+    description: "Brandon Li's (PulseBeat02) portfolio showcasing projects, skills, and experience.",
+    keywords: ['developer', 'software-engineer', 'portfolio', 'projects', 'experience', 'PulseBeat02'],
     icons: {
-        icon: 'favicon.ico?v=2'
+        icon: '/favicon.ico?v=2'
     },
     robots: {
         index: true,
@@ -29,14 +29,6 @@ export const metadata: Metadata = {
         locale: 'en_US',
         url: 'https://brandonli.me',
         siteName: "Brandon Li",
-        images: [
-            {
-                url: 'favicon.ico?v=2',
-                width: 1200,
-                height: 630,
-                alt: "Brandon Li",
-            }
-        ],
     },
     metadataBase: new URL('https://brandonli.me')
 };

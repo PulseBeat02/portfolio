@@ -13,6 +13,12 @@
       "matchUpdateTypes": ["major"],
       "enabled": false,
       "description": "Stay on 6.x."
+    },
+    {
+      "matchPackageNames": ["eslint"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "description": "Stay on 9.x until eslint-config-next supports ESLint 10."
     }
   ]
 }
