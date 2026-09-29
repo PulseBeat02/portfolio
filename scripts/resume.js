@@ -1,32 +1,39 @@
 import fs from "fs";
 import {setTimeout as sleep} from "timers/promises";
 import {
-    paths, github, youtube, latex, fetchTimeoutMs,
+    paths, github, youtube, latex, fetchTimeoutMs, rounding,
     staticPlaceholders, requiredPlaceholders, redactionPatterns, redactionMaxLength,
 } from "./resume.config.js";
 
-function formatGitHubStat(n) {
-    if (n < 10 || n % 10 === 0) {
-        return n.toString();
+const ROUNDING_MODES = {up: Math.ceil, nearest: Math.round, down: Math.floor};
+
+function roundTo(n, step) {
+    const round = ROUNDING_MODES[rounding];
+    if (!round) {
+        throw new Error(`Unknown rounding mode: ${rounding}`);
     }
-    return `${Math.floor(n / 10) * 10}+`;
+    return round(n / step) * step;
 }
 
-// Always rounds down, since the resume presents these as "over N".
-function floorToFixed(n, digits) {
-    const factor = 10 ** digits;
-    return (Math.floor(n * factor) / factor).toFixed(digits);
+function formatGitHubStat(n) {
+    const rounded = n < 10 && rounding !== "up" ? n : roundTo(n, 10);
+    return rounded < n ? `${rounded}+` : rounded.toString();
 }
 
 function formatLargeNumber(n, decimal = false) {
     if (n >= 1_000_000) {
-        return decimal ? `${floorToFixed(n / 1_000_000, 1)}M` : `${Math.floor(n / 1_000_000)}M`;
+        return decimal ? `${(roundTo(n, 100_000) / 1_000_000).toFixed(1)}M` : `${roundTo(n, 1_000_000) / 1_000_000}M`;
     }
     if (n >= 100_000) {
-        return `${Math.floor(n / 10_000) * 10}k`;
+        const rounded = roundTo(n, 10_000);
+        return rounded >= 1_000_000 ? formatLargeNumber(rounded, decimal) : `${rounded / 1_000}k`;
     }
     if (n >= 10_000) {
-        return decimal ? `${floorToFixed(n / 1_000, 1)}k` : `${Math.floor(n / 1_000)}k`;
+        const rounded = decimal ? roundTo(n, 100) : roundTo(n, 1_000);
+        if (rounded >= 100_000) {
+            return formatLargeNumber(rounded, decimal);
+        }
+        return decimal ? `${(rounded / 1_000).toFixed(1)}k` : `${rounded / 1_000}k`;
     }
     return n.toString();
 }

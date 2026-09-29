@@ -33,6 +33,10 @@ export const latex = {
 
 export const fetchTimeoutMs = 30_000;
 
+// How stats on the resume are rounded, e.g. for 907 stars and 3,360,144 impressions:
+// "up" (910, 3.4M), "nearest" (910, 3.4M; 113 forks -> "110+") or "down" (900+, 3.3M).
+export const rounding = "up";
+
 export const staticPlaceholders = {
     GRAD_YEAR: "2028",
 };
