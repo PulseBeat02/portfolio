@@ -138,7 +138,6 @@
     \resumeSubheading
     {University of California, Los Angeles (UCLA)}{Expected June {{GRAD_YEAR}}}
     {Bachelor of Science in Computer Science}{Los Angeles, CA}
-    \vspace{1mm}
     \resumeSubHeadingListEnd
 
 
@@ -147,38 +146,34 @@
     \resumeSubHeadingListStart
     \resumeSubheading
     {Software Development Engineer Intern}{Sep 2026 -- Present}
-    {Amazon (AWS)}{Boston, MA}
+    {Amazon (Amazon Web Services)}{Boston, MA}
+    \resumeItemListStart
+    \resumeItem{Extended Amazon’s Remote MCP server with 8 endpoints by integrating an internal work-management service (similar to Jira), enabling hundreds of thousands of employees to execute workflows directly from a chatbot.}
+    \resumeItem{Built specialized AI agents for internal work-management workflows, allowing agent-to-agent (A2A) coordination for custom tasks such as summarization and board updates while handling thousands of production requests.}
+    \resumeItem{Implemented A2A authentication and support for user-mocking agents for secure agent interactions and handoffs.}
+    \resumeItem{Improved production reliability and debuggability by adding logging and over a hundred unit, wiring, and deployment tests, catching possible failures before release and validating end-to-end deployment behavior.}
+    \resumeItemListEnd
     \vspace{1mm}
     \resumeSubheading
     {Software Engineering Intern}{June 2026 -- Sep 2026}
     {Google (YouTube)}{San Bruno, CA}
     \resumeItemListStart
-    \resumeItem{Engineered 10-bit software AV1 HDR video playback for the YouTube Android app via low-level ARM/NEON SIMD vectorization in C++ to improve the video quality and playback performance for millions of users.}
-    \resumeItem{Defined per-device video resolution caps (e.g. 1080p) for dav1d software decoding, filtering higher resolution formats out of the playback selection to prevent thermal throttling and battery drain on lower-end devices.}
+    \resumeItem{Engineered 10-bit software AV1 HDR video playback for the YouTube Android app via low-level ARM/NEON SIMD vectorization in C++, improving the video quality and playback performance for millions of users.}
+    \resumeItem{Defined per-device video resolution caps (e.g. 1080p) for dav1d software decoding, filtering higher-resolution formats out of the playback selection to prevent thermal throttling and battery drain on lower-end devices.}
     \resumeItem{Built a Java-based shader effect debug UI and OpenGL video pipeline to accelerate developer iteration speed.}
     \resumeItem{Integrated custom fragment shaders to allow video effects across thousands of DRM-protected shows and movies.}
     \resumeItem{Resolved memory leaks, migrated deprecated code, and improved format filtering across ExoPlayer and YouTube.}
     \resumeItemListEnd
     \vspace{1mm}
     \resumeSubheading
-    {Open Source Contributor}{Jan 2026 -- June 2026}
-    {VideoLAN}{Remote}
-    \resumeItemListStart
-    \resumeItem{Built a shared dynamics core powering limiter and expander audio filters to cut duplicate code by 20\%.}
-    \resumeItem{Integrated ggml and OpenCV dependencies into VLC's build system to enable on-device model inference.}
-    \resumeItem{Ported 3 legacy OpenCV modules from C to C++ and upgraded the SAM2 filter to SAM3 to allow text prompts.}
-    \resumeItem{Cut the final VLC binary size by 5\% using linker-level dead-code stripping to reduce unnecessary dependencies.}
-    \resumeItemListEnd
-    \vspace{1mm}
-    \resumeSubheading
     {Software Engineering Intern}{June 2025 -- Sep 2025}
     {VideoLAN}{Remote}
     \resumeItemListStart
-    \resumeItem{Integrated a SAM2 model module with OpenCV to enable real-time segmentation of 100+ concurrent objects.}
-    \resumeItem{Implemented YuNet-based ML face detection to allow tracking for 100+ concurrent faces in surveillance systems.}
-    \resumeItem{Built fast video-to-GIF conversion with five dithering algorithms for customizable quality and performance.}
+    \resumeItem{Built a shared audio dynamics core, cutting duplicate code by 20\% and binary size by 5\% to speed up downloads.}
+    \resumeItem{Added ggml/OpenCV to VLC, ported 3 modules to C++, and upgraded to SAM3 to support text segmentation.}
+    \resumeItem{Designed SAM2 object segmentation and YuNet face detection to be able to track over 100 concurrent targets.}
+    \resumeItem{Implemented 5 different dithering algorithms to allow users to convert videos into GIF files at varying qualities.}
     \resumeItemListEnd
-    \vspace{1mm}
     \resumeSubHeadingListEnd
 
 
@@ -188,23 +183,22 @@
     \resumeProjectHeading
     {\href{https://github.com/PulseBeat02/yt-media-storage}{\textbf{yt-media-storage}} $|$ \emph{C++, Assembly/SIMD, FFmpeg, Coding Theory, Compression}}{Feb 2026 -- Present}
     \resumeItemListStart
-    \resumeItem{Built an C++ tool ({{YT_STORAGE_STARS}} stars, {{YT_STORAGE_FORKS}} forks) that encodes  files into YouTube videos for storage.}
-    \resumeItem{Achieved a 100x speed-up using inline Assembly, SIMD intrinsics, and OpenMP parallelization.}
-    \resumeItem{Designed lightweight Qt 6 UI and libsodium encryption, enhancing user experience and security.}
-    \resumeItem{Uses robust CRC and Wirehair error-correction to bypass lossy video compression algorithms.}
-    \resumeItem{Reached \#5 on Hacker News (Y Combinator) within 12 hours, generating thousands of views.}
-    \resumeItem{Includes \href{https://www.youtube.com/watch?v=l03Os5uwWmk}{technical explanation video} with over {{YT_IMPRESSIONS}} impressions, educating over {{YT_VIEWERS}} viewers.}
+    \resumeItem{Built a C++ tool ({{YT_STORAGE_STARS}} stars, {{YT_STORAGE_FORKS}} forks) that can convert desktop files into YouTube videos for storage.}
+    \resumeItem{Implemented SIMD intrinsics, OpenMP parallelization, and cache optimizations to speed up conversion by 100x.}
+    \resumeItem{Designed a lightweight UI using Qt 6 and added libsodium encryption to enhance usability and security.}
+    \resumeItem{Used CRC and Wirehair error correction to recover data corrupted by lossy video compression algorithms.}
+    \resumeItem{Reached \#5 on Hacker News (Y Combinator) in 12 hours, drawing thousands of views and new contributors.}
+    \resumeItem{Published a \href{https://www.youtube.com/watch?v=l03Os5uwWmk}{technical explanation video} on YouTube with over {{YT_IMPRESSIONS}} impressions, educating over {{YT_VIEWERS}} viewers.}
     \resumeItemListEnd
     \vspace{1mm}
     \resumeProjectHeading
     {\href{https://github.com/PulseBeat02/mcav}{\textbf{mcav}} $|$ \emph{Java, Spring Boot, TypeScript, CI/CD}}{June 2020 -- Present}
     \resumeItemListStart
-    \resumeItem{Built an 12-module, 150K-line Java media framework ({{MCAV_STARS}} stars, {{MCAV_FORKS}} forks) whose unified player API streams real-time video from VLC, OpenCV, Chromium, VNC, and QEMU sources across four pluggable render backends.}
+    \resumeItem{Built a 12-module, 150K-line Java media framework ({{MCAV_STARS}} stars, {{MCAV_FORKS}} forks) whose unified player API streams real-time video from VLC, OpenCV, Chromium, VNC, and QEMU sources across four pluggable render backends.}
     \resumeItem{Designed a pure-GPU (GLSL fragment shader) video codec with O(1) per-pixel random access, improving BD-rate over 40\% with VMAF-scored optimization rounds to reach 10 ms/frame at 1080p for integrated graphics cards.}
     \resumeItem{Engineered a low-latency pipeline API with nearly 50 different documented video effects that can be applied.}
-    \resumeItem{Self-hosted a TeamCity CI/CD pipeline publishing releases to a Maven repository, gated with 2,500+ tests.}
+    \resumeItem{Self-hosted a TeamCity CI/CD pipeline that publishes releases to a Maven repository, gated with 2,500+ tests.}
     \resumeItemListEnd
-    \vspace{1mm}
     \resumeSubHeadingListEnd
 
 
@@ -213,8 +207,8 @@
     \begin{itemize}[leftmargin=0.15in, label={}]
     \small{\item{
         \textbf{Languages}{: Java, C/C++, OCaml, JavaScript/TypeScript, Assembly} \\
-        \textbf{Frameworks \& Libraries}{: Spring, Hibernate, FFmpeg, OpenCV, libVLC, React, Next.js, Tailwind} \\
-        \textbf{Technologies}{: Git, MongoDB, AWS, Google Cloud, Oracle Cloud, CMake, Meson, OpenGL, ExoPlayer, Android} \\
+        \textbf{Frameworks \& Libraries}{: Spring, Hibernate, FFmpeg, OpenCV, libVLC, ExoPlayer, React, Next.js, Tailwind} \\
+        \textbf{Technologies}{: AWS, AI Agents, MCP, Git, CMake, Meson, OpenGL, Android, GLSL, VMAF, AV1, NEON/SIMD} \\
         \textbf{Awards}{: Dean's Honor List}
     }}
     \end{itemize}

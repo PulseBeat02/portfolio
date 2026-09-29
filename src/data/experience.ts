@@ -9,11 +9,11 @@ export interface ExperienceItem {
 
 export const experiences: ExperienceItem[] = [
     {
-        company: "Amazon Web Services (AWS)",
-        role: "Software Development Engineering Intern",
-        description: "Task Management & Issues (Fall 2026)",
+        company: "Amazon (Amazon Web Services)",
+        role: "Software Development Engineer Intern",
+        description: "MCPs & Agents for Internal Task Management (Fall 2026)",
         period: "Sep 2026 - Dec 2026",
-        technologies: ["Java", "Python", "JavaScript"],
+        technologies: ["MCP", "AI Agents", "JavaScript", "TypeScript", "Python"],
         link: "https://aws.amazon.com/"
     },
     {
@@ -23,14 +23,6 @@ export const experiences: ExperienceItem[] = [
         period: "Jun 2026 - Sep 2026",
         technologies: ["Java", "Android", "C++"],
         link: "https://www.youtube.com/"
-    },
-    {
-        company: "VideoLAN",
-        role: "Open Source Contributer",
-        description: "Various Tweaks",
-        period: "Jan 2026 - Present",
-        technologies: ["C", "C++", "OpenCV", "AI/ML", "Makefile", "Meson"],
-        link: "https://www.videolan.org/"
     },
     {
         company: "VideoLAN",
