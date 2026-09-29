@@ -19,7 +19,7 @@ function ProjectCard({project}: { project: ProjectItem }) {
             }}
         >
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                <div style={{flex: '1', paddingRight: '16px'}}>
+                <div style={{flex: '1', paddingRight: '16px', minHeight: '120px'}}>
                     <Typography component="h3" sx={{fontSize: '1.25rem'}}>
                         {project.github ? <CustomLink href={project.github}>{project.title}</CustomLink> : project.title}
                     </Typography>

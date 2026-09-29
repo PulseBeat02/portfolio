@@ -18,7 +18,7 @@ export const projects: ProjectItem[] = [
         title: "mcav",
         description: "An advanced Java multimedia framework for building Java media applications.",
         thumbnail: "/mcav.webp",
-        technologies: ["Java", "GLSL", "libVLC", "OpenCV", "QEMU", "VNC", "TeamCity", "Maven"],
+        technologies: ["Java", "GLSL", "libVLC", "OpenCV", "QEMU", "TeamCity", "Maven"],
         github: "https://github.com/PulseBeat02/mcav"
     },
     {

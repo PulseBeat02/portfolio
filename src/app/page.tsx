@@ -15,14 +15,14 @@ export default function Home() {
     const experienceRef = useRef<HTMLDivElement>(null);
     const projectsRef = useRef<HTMLDivElement>(null);
     return (
-        <Box component="main" sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', p: 5, alignItems: 'center'}}>
+        <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', p: 5, alignItems: 'center'}}>
             <Grid
                 container
                 spacing={15}
                 sx={{marginTop: 5, justifyContent: "center", maxWidth: "1200px"}}
             >
                 <Grid>
-                    <Box sx={{
+                    <Box component="header" sx={{
                         position: {lg: 'sticky'},
                         top: {lg: '2rem'},
                         display: 'flex',
@@ -46,7 +46,7 @@ export default function Home() {
                     </Box>
                 </Grid>
                 <Grid>
-                    <Box>
+                    <Box component="main">
                         <Box ref={aboutMeRef} id="about" tabIndex={-1} sx={{outline: 'none'}}>
                             <Fade scrollTriggered delay={0.25}>
                                 <AboutMe/>
@@ -71,7 +71,7 @@ export default function Home() {
                             maxWidth: '350px'
                         }}>
                             <Typography variant="body2" sx={{color: 'text.secondary'}}>
-                                Designed with 🧠, developed using <CustomLink
+                                Designed with <Box component="span" sx={{color: 'common.white'}}>🧠</Box>, developed using <CustomLink
                                 href="https://www.jetbrains.com/webstorm/">WebStorm IDE</CustomLink>.
                                 Built using <CustomLink
                                 href="https://reactjs.org/">React</CustomLink>, <CustomLink

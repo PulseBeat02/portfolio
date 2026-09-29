@@ -8,11 +8,10 @@ import {
 const ROUNDING_MODES = {up: Math.ceil, nearest: Math.round, down: Math.floor};
 
 function roundTo(n, step) {
-    const round = ROUNDING_MODES[rounding];
-    if (!round) {
+    if (!Object.hasOwn(ROUNDING_MODES, rounding)) {
         throw new Error(`Unknown rounding mode: ${rounding}`);
     }
-    return round(n / step) * step;
+    return ROUNDING_MODES[rounding](n / step) * step;
 }
 
 function formatGitHubStat(n) {
@@ -22,7 +21,8 @@ function formatGitHubStat(n) {
 
 function formatLargeNumber(n, decimal = false) {
     if (n >= 1_000_000) {
-        return decimal ? `${(roundTo(n, 100_000) / 1_000_000).toFixed(1)}M` : `${roundTo(n, 1_000_000) / 1_000_000}M`;
+        const millions = roundTo(n, 100_000) / 1_000_000;
+        return decimal || !Number.isInteger(millions) ? `${millions.toFixed(1)}M` : `${millions}M`;
     }
     if (n >= 100_000) {
         const rounded = roundTo(n, 10_000);

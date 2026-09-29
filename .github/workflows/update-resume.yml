@@ -24,6 +24,8 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref }}
 
       - uses: actions/setup-node@v7
         with:
