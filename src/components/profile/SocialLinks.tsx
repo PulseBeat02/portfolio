@@ -2,6 +2,7 @@ import {Box} from "@mui/material";
 import {socialLinks, type SocialLink} from "@/data/profile";
 import {EXTERNAL_LINK_ATTRIBUTES} from "@/components/ui/ExternalLink";
 import {dimSiblingsOnHover} from "@/components/ui/styles";
+import {analyticsEventNames, buildAnalyticsEventAttributes} from "@/lib/analytics";
 import {easings} from "@/theme/tokens";
 
 const SOCIAL_ICON_SIZE_PIXELS = 24;
@@ -13,6 +14,7 @@ function SocialIconLink({Icon, href, label}: SocialLink) {
             href={href}
             {...EXTERNAL_LINK_ATTRIBUTES}
             aria-label={label}
+            {...buildAnalyticsEventAttributes(analyticsEventNames.socialLinkClicked(label))}
             sx={{
                 display: 'inline-flex',
                 color: 'inherit',

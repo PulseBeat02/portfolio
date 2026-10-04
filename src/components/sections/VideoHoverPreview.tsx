@@ -4,6 +4,7 @@ import Image from "next/image";
 import {useEffect, useRef, useState} from "react";
 import {getVideoPreviewPath} from "@/data/videos";
 import {hasFinePointer, prefersReducedMotion} from "@/lib/browser";
+import {PREVIEW_PLAYING_DATA_ATTRIBUTE} from "@/lib/video-preview";
 import {motionTimings} from "@/theme/motion";
 
 const HOVER_INTENT_DELAY_MILLISECONDS = 250;
@@ -43,7 +44,12 @@ export function VideoHoverPreview({videoId}: { videoId: string }) {
     const isPreviewVisible = isHoverIntended && hasPreviewLoaded;
 
     return (
-        <span ref={containerRef} aria-hidden style={{position: "absolute", inset: 0, pointerEvents: "none"}}>
+        <span
+            ref={containerRef}
+            aria-hidden
+            {...{[PREVIEW_PLAYING_DATA_ATTRIBUTE]: isPreviewVisible}}
+            style={{position: "absolute", inset: 0, pointerEvents: "none"}}
+        >
             {isHoverIntended && (
                 <Image
                     src={getVideoPreviewPath(videoId)}

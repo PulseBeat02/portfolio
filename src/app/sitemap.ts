@@ -1,13 +1,13 @@
 import type {MetadataRoute} from "next";
-import {SITE_URL} from "@/data/site";
+import {SITE_LAST_UPDATED_DATE, SITE_URL} from "@/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     return [
         {
             url: SITE_URL,
-            lastModified: new Date(),
-            changeFrequency: "daily",
-            priority: 0.7,
+            lastModified: SITE_LAST_UPDATED_DATE,
+            changeFrequency: "weekly",
+            priority: 1,
         },
     ];
 }

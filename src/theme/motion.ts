@@ -7,4 +7,5 @@ export const motionTimings = {
     staggerSeconds: 0.2,
     introEndSeconds: 0.3,
     hoverPreviewFadeSeconds: 0.4,
+    notFoundStaggerSeconds: 0.25,
 } as const;

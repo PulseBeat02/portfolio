@@ -9,6 +9,7 @@ import {VideoHoverPreview} from "@/components/sections/VideoHoverPreview";
 import {EXTERNAL_LINK_ATTRIBUTES, ExternalLink} from "@/components/ui/ExternalLink";
 import {dimSiblingsOnHover, metadataTextStyle} from "@/components/ui/styles";
 import {formatPublishedDate} from "@/lib/format";
+import {PREVIEW_PLAYING_DATA_ATTRIBUTE} from "@/lib/video-preview";
 import {blackAlpha, colors, layout, whiteAlpha} from "@/theme/tokens";
 
 const VIDEOS_PER_ROW = 2;
@@ -71,6 +72,7 @@ function VideoCard({video, rowIndex}: { video: VideoItem; rowIndex: number }) {
                     [`&:hover .${VIDEO_TITLE_CLASS_NAME}`]: {color: colors.accent},
                     [`&:hover .${VIDEO_THUMBNAIL_CLASS_NAME} img`]: {transform: 'scale(1.04)'},
                     [`&:hover .${VIDEO_PLAY_OVERLAY_CLASS_NAME}`]: {opacity: 1},
+                    [`&:hover [${PREVIEW_PLAYING_DATA_ATTRIBUTE}="true"] ~ .${VIDEO_PLAY_OVERLAY_CLASS_NAME}`]: {opacity: 0},
                     '&:focus-visible': {outline: `2px solid ${colors.accent}`, outlineOffset: 4, borderRadius: 2},
                 }}
             >

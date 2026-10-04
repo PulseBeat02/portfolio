@@ -2,6 +2,7 @@ import "@/app/globals.css";
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import React from "react";
+import {AnalyticsScript} from "@/components/analytics/AnalyticsScript";
 import {AppProviders} from "@/components/providers/AppProviders";
 import {SITE_URL, siteMetadata} from "@/data/site";
 import {buildPersonStructuredData, serializeStructuredData} from "@/lib/structured-data";
@@ -50,6 +51,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <AppProviders>
             {children}
         </AppProviders>
+        <AnalyticsScript/>
         </body>
         </html>
     );

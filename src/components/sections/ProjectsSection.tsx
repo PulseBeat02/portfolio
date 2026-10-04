@@ -10,6 +10,7 @@ import {TimelineIcon} from "@/components/timeline/TimelineIcon";
 import {TimelineItem} from "@/components/timeline/TimelineItem";
 import {EXTERNAL_LINK_ATTRIBUTES} from "@/components/ui/ExternalLink";
 import {TechChips} from "@/components/ui/TechChips";
+import {analyticsEventNames, buildAnalyticsEventAttributes} from "@/lib/analytics";
 import {getRepositoryStats, type RepositoryStats} from "@/lib/github";
 import {colors, whiteAlpha} from "@/theme/tokens";
 
@@ -28,6 +29,7 @@ function ProjectTitleLink({project}: { project: ProjectItem }) {
             href={project.repositoryUrl}
             {...EXTERNAL_LINK_ATTRIBUTES}
             className={PROJECT_TITLE_CLASS_NAME}
+            {...buildAnalyticsEventAttributes(analyticsEventNames.projectLinkClicked(project.title))}
             sx={{
                 color: colors.textPrimary,
                 textDecoration: 'none',

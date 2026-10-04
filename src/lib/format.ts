@@ -1,7 +1,7 @@
 const THOUSAND = 1_000;
 const TEN_THOUSAND = 10_000;
 
-const publishedDateFormatter = new Intl.DateTimeFormat("en-US", {
+const shortUtcDateFormatter = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -23,5 +23,9 @@ function parseIsoDate(isoDate: string): Date {
 }
 
 export function formatPublishedDate(isoDate: string): string {
-    return publishedDateFormatter.format(parseIsoDate(isoDate));
+    return shortUtcDateFormatter.format(parseIsoDate(isoDate));
+}
+
+export function formatShortUtcDate(date: Date): string {
+    return shortUtcDateFormatter.format(date);
 }

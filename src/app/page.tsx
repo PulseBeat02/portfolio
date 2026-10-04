@@ -1,5 +1,6 @@
 import {CommandMenu} from "@/components/command-menu/CommandMenu";
 import {PageLayout} from "@/components/layout/PageLayout";
+import {SiteFooter} from "@/components/layout/SiteFooter";
 import {Spotlight} from "@/components/motion/Spotlight";
 import {ProfileCard} from "@/components/profile/ProfileCard";
 import {AboutSection} from "@/components/sections/AboutSection";
@@ -21,6 +22,8 @@ export default function HomePage() {
                 <ProjectsSection/>
                 <SoftDivider/>
                 <VideosSection/>
+                <SoftDivider/>
+                <SiteFooter/>
             </PageLayout>
         </>
     );

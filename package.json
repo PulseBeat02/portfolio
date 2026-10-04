@@ -9,7 +9,8 @@
     "build": "node scripts/resume.js && next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "node --test 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

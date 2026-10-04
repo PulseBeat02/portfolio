@@ -7,6 +7,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {profile} from "@/data/profile";
 import {siteMetadata} from "@/data/site";
 import {accentButtonStyle} from "@/components/ui/styles";
+import {analyticsEventNames, buildAnalyticsEventAttributes} from "@/lib/analytics";
 import {accentAlpha} from "@/theme/tokens";
 
 const RESUME_TITLE = `${profile.name}'s Resume`;
@@ -55,6 +56,7 @@ export function ResumeButton() {
                 variant="outlined"
                 endIcon={<OpenInNewIcon/>}
                 onClick={() => setIsResumeOpen(true)}
+                {...buildAnalyticsEventAttributes(analyticsEventNames.resumeOpened)}
                 sx={{mt: 2, whiteSpace: 'nowrap', ...accentButtonStyle}}
             >
                 View My Resume (PDF)
