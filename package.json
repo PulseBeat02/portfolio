@@ -7,7 +7,6 @@
     "compile-resume": "node scripts/resume.js",
     "dev": "node scripts/resume.js && next dev --turbopack",
     "build": "node scripts/resume.js && next build",
-    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
@@ -19,12 +18,11 @@
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
     "@mui/material-nextjs": "^9.4.0",
-    "motion": "^13.0.0",
     "next": "16.3.8",
-    "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -36,5 +34,10 @@
     "eslint-config-next": "16.3.8",
     "tailwindcss": "^4",
     "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "@next/eslint-plugin-next": {
+      "fast-glob": "npm:tinyglobby@0.2.17"
+    }
   }
 }

@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://brandonli.me
-
-# Sitemaps
-Sitemap: https://brandonli.me/sitemap.xml

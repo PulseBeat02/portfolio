@@ -1,24 +1,29 @@
-import Providers from "@/app/providers";
 import "@/app/globals.css";
-import React from "react";
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
+import React from "react";
+import {AppProviders} from "@/components/providers/AppProviders";
+import {SITE_URL, siteMetadata} from "@/data/site";
+import {buildPersonStructuredData, serializeStructuredData} from "@/lib/structured-data";
 
-const inter = Inter({
+const interFont = Inter({
     subsets: ['latin'],
     display: 'swap',
     variable: '--font-inter',
 });
 
+const RESET_SCROLL_ON_RELOAD_SCRIPT = "history.scrollRestoration='manual';scrollTo(0,0);";
+
 export const metadata: Metadata = {
     title: {
-        template: "%s | Brandon Li",
-        default: "Brandon Li",
+        template: siteMetadata.titleTemplate,
+        default: siteMetadata.siteName,
     },
-    description: "Brandon Li's (PulseBeat02) portfolio showcasing projects, skills, and experience.",
-    keywords: ['developer', 'software-engineer', 'portfolio', 'projects', 'experience', 'PulseBeat02'],
+    description: siteMetadata.description,
+    keywords: [...siteMetadata.keywords],
     icons: {
-        icon: '/favicon.ico?v=2'
+        icon: siteMetadata.faviconPath,
+        apple: siteMetadata.appleTouchIconPath,
     },
     robots: {
         index: true,
@@ -26,20 +31,25 @@ export const metadata: Metadata = {
     },
     openGraph: {
         type: 'website',
-        locale: 'en_US',
-        url: 'https://brandonli.me',
-        siteName: "Brandon Li",
+        locale: siteMetadata.locale,
+        url: SITE_URL,
+        siteName: siteMetadata.siteName,
     },
-    metadataBase: new URL('https://brandonli.me')
+    metadataBase: new URL(SITE_URL),
 };
 
 export default function RootLayout({children}: { children: React.ReactNode }) {
     return (
-        <html lang="en" className={inter.variable}>
+        <html lang="en" className={interFont.variable}>
         <body>
-        <Providers>
+        <script dangerouslySetInnerHTML={{__html: RESET_SCROLL_ON_RELOAD_SCRIPT}}/>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{__html: serializeStructuredData(buildPersonStructuredData())}}
+        />
+        <AppProviders>
             {children}
-        </Providers>
+        </AppProviders>
         </body>
         </html>
     );

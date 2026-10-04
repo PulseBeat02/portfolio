@@ -1,88 +1,27 @@
-"use client";
+import {CommandMenu} from "@/components/command-menu/CommandMenu";
+import {PageLayout} from "@/components/layout/PageLayout";
+import {Spotlight} from "@/components/motion/Spotlight";
+import {ProfileCard} from "@/components/profile/ProfileCard";
+import {AboutSection} from "@/components/sections/AboutSection";
+import {ExperienceSection} from "@/components/sections/ExperienceSection";
+import {ProjectsSection} from "@/components/sections/ProjectsSection";
+import {VideosSection} from "@/components/sections/VideosSection";
+import {SoftDivider} from "@/components/ui/SoftDivider";
 
-import Contact from "@/app/contact";
-import AboutMe from "@/app/aboutme";
-import Experience from "@/app/experience";
-import {Grid, Box, Typography} from "@mui/material";
-import Projects from "@/app/projects";
-import React, {useRef} from "react";
-import Navbar from "@/app/navigation";
-import {Fade} from '@/app/fade'
-import {CustomLink} from "@/app/common";
-
-export default function Home() {
-    const aboutMeRef = useRef<HTMLDivElement>(null);
-    const experienceRef = useRef<HTMLDivElement>(null);
-    const projectsRef = useRef<HTMLDivElement>(null);
+export default function HomePage() {
     return (
-        <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', p: 5, alignItems: 'center'}}>
-            <Grid
-                container
-                spacing={15}
-                sx={{marginTop: 5, justifyContent: "center", maxWidth: "1200px"}}
-            >
-                <Grid>
-                    <Box component="header" sx={{
-                        position: {lg: 'sticky'},
-                        top: {lg: '2rem'},
-                        display: 'flex',
-                        flexDirection: {xs: 'column', md: 'row', lg: 'column'},
-                        alignItems: 'flex-start',
-                        width: '100%',
-                        gap: {md: 10, lg: 0}
-                    }}>
-                        <Fade delay={0.3}>
-                            <Contact/>
-                        </Fade>
-                        <Box sx={{display: {xs: 'none', sm: 'none', md: 'block'}}}>
-                            <Fade delay={0.4}>
-                                <Navbar
-                                    aboutMeRef={aboutMeRef}
-                                    experienceRef={experienceRef}
-                                    projectsRef={projectsRef}
-                                />
-                            </Fade>
-                        </Box>
-                    </Box>
-                </Grid>
-                <Grid>
-                    <Box component="main">
-                        <Box ref={aboutMeRef} id="about" tabIndex={-1} sx={{outline: 'none'}}>
-                            <Fade scrollTriggered delay={0.25}>
-                                <AboutMe/>
-                            </Fade>
-                        </Box>
-                        <Box sx={{marginTop: 5, outline: 'none'}} ref={experienceRef} id="experience" tabIndex={-1}>
-                            <Fade scrollTriggered delay={0.25}>
-                                <Experience/>
-                            </Fade>
-                        </Box>
-                        <Box sx={{marginTop: 5, outline: 'none'}} ref={projectsRef} id="projects" tabIndex={-1}>
-                            <Fade scrollTriggered delay={0.1}>
-                                <Projects/>
-                            </Fade>
-                        </Box>
-                    </Box>
-                    <Fade scrollTriggered>
-                        <Box component="footer" sx={{
-                            width: '100%',
-                            py: 4,
-                            mt: 6,
-                            maxWidth: '350px'
-                        }}>
-                            <Typography variant="body2" sx={{color: 'text.secondary'}}>
-                                Designed with <Box component="span" sx={{color: 'common.white'}}>🧠</Box>, developed using <CustomLink
-                                href="https://www.jetbrains.com/webstorm/">WebStorm IDE</CustomLink>.
-                                Built using <CustomLink
-                                href="https://reactjs.org/">React</CustomLink>, <CustomLink
-                                href="https://nextjs.org/">Next.js</CustomLink>, <CustomLink
-                                href="https://tailwindcss.com/">Tailwind</CustomLink>, and <CustomLink
-                                href="https://mui.com/">Material-UI</CustomLink> components.
-                            </Typography>
-                        </Box>
-                    </Fade>
-                </Grid>
-            </Grid>
-        </Box>
+        <>
+            <Spotlight/>
+            <CommandMenu/>
+            <PageLayout sidebar={<ProfileCard/>}>
+                <SoftDivider sx={{display: {lg: 'none'}, mb: 4}}/>
+                <AboutSection/>
+                <ExperienceSection/>
+                <SoftDivider/>
+                <ProjectsSection/>
+                <SoftDivider/>
+                <VideosSection/>
+            </PageLayout>
+        </>
     );
 }

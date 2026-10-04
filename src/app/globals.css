@@ -5,3 +5,22 @@
 @theme inline {
     --font-sans: var(--font-inter), system-ui, sans-serif;
 }
+
+@keyframes fade-in {
+    from {
+        opacity: 0.01;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fade-in 1.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-in {
+        animation: none;
+    }
+}

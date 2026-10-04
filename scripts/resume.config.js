@@ -4,9 +4,9 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const paths = {
-    template: path.join(__dirname, "..", "public", "resume.tex"),
-    pdf: path.join(__dirname, "..", "public", "resume.pdf"),
-    redactedPdf: path.join(__dirname, "..", "public", "redacted.pdf"),
+    template: path.join(__dirname, "..", "resume", "resume.tex"),
+    pdf: path.join(__dirname, "..", "public", "documents", "resume.pdf"),
+    redactedPdf: path.join(__dirname, "..", "public", "documents", "redacted.pdf"),
     cache: path.join(__dirname, "resume-cache.json"),
 };
 

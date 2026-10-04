@@ -1,38 +1,38 @@
 export interface ProjectItem {
     title: string;
     description: string;
-    thumbnail: string;
+    iconPath: string;
     technologies: string[];
-    github?: string;
+    repositoryUrl: string;
 }
 
 export const projects: ProjectItem[] = [
     {
         title: "yt-media-storage",
-        description: "A tool to encode/decode files into uploadable videos.",
-        thumbnail: "/yt-media-storage.webp",
+        description: "Stores any file as a YouTube video.",
+        iconPath: "/images/logos/yt-media-storage.webp",
         technologies: ["C++", "FFmpeg", "SIMD", "OpenMP", "Qt 6", "libsodium", "Wirehair"],
-        github: "https://github.com/PulseBeat02/yt-media-storage"
+        repositoryUrl: "https://github.com/PulseBeat02/yt-media-storage"
     },
     {
         title: "mcav",
-        description: "An advanced Java multimedia framework for building Java media applications.",
-        thumbnail: "/mcav.webp",
-        technologies: ["Java", "GLSL", "libVLC", "OpenCV", "QEMU", "TeamCity", "Maven"],
-        github: "https://github.com/PulseBeat02/mcav"
+        description: "A real-time Java multimedia framework.",
+        iconPath: "/images/logos/mcav.webp",
+        technologies: ["Java", "GLSL", "libVLC", "OpenCV", "QEMU", "VNC", "TeamCity", "Maven"],
+        repositoryUrl: "https://github.com/PulseBeat02/mcav"
     },
     {
         title: "Pulse Media Player",
-        description: "A robust media player written in 1K lines of C++ code.",
-        thumbnail: "/mpv.webp",
+        description: "A media player in 1K lines of C++.",
+        iconPath: "/images/logos/mpv.webp",
         technologies: ["C++", "OpenGL", "OpenAL", "FFmpeg"],
-        github: "https://github.com/PulseBeat02/video-player"
+        repositoryUrl: "https://github.com/PulseBeat02/video-player"
     },
     {
         title: "Murder Run",
-        description: "A Bukkit gamemode for Minecraft servers based on the game, Dead by Daylight.",
-        thumbnail: "/murderrun.webp",
+        description: "A Dead by Daylight gamemode for Minecraft.",
+        iconPath: "/images/logos/murderrun.webp",
         technologies: ["Java", "Hibernate", "Bukkit"],
-        github: "https://github.com/PulseBeat02/murderrun"
+        repositoryUrl: "https://github.com/PulseBeat02/murderrun"
     }
 ];
