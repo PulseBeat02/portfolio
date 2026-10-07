@@ -1,62 +1,63 @@
 import fs from "fs";
+import path from "path";
 import {setTimeout as sleep} from "timers/promises";
 import {
-    paths, github, youtube, latex, fetchTimeoutMs, rounding,
+    paths, documents, github, youtube, latex, fetchTimeoutMs, rounding,
     staticPlaceholders, requiredPlaceholders, redactionPatterns, redactionMaxLength,
 } from "./resume.config.js";
 
 const ROUNDING_MODES = {up: Math.ceil, nearest: Math.round, down: Math.floor};
 
-function roundTo(n, step) {
+function roundToStep(value, step) {
     if (!Object.hasOwn(ROUNDING_MODES, rounding)) {
         throw new Error(`Unknown rounding mode: ${rounding}`);
     }
-    return ROUNDING_MODES[rounding](n / step) * step;
+    return ROUNDING_MODES[rounding](value / step) * step;
 }
 
-function formatGitHubStat(n) {
-    const rounded = n < 10 && rounding !== "up" ? n : roundTo(n, 10);
-    return rounded < n ? `${rounded}+` : rounded.toString();
+function formatGitHubStat(statCount) {
+    const roundedCount = statCount < 10 && rounding !== "up" ? statCount : roundToStep(statCount, 10);
+    return roundedCount < statCount ? `${roundedCount}+` : roundedCount.toString();
 }
 
-function formatLargeNumber(n, decimal = false) {
-    if (n >= 1_000_000) {
-        const millions = roundTo(n, 100_000) / 1_000_000;
-        return decimal || !Number.isInteger(millions) ? `${millions.toFixed(1)}M` : `${millions}M`;
+function formatLargeNumber(count, showDecimal = false) {
+    if (count >= 1_000_000) {
+        const millions = roundToStep(count, 100_000) / 1_000_000;
+        return showDecimal || !Number.isInteger(millions) ? `${millions.toFixed(1)}M` : `${millions}M`;
     }
-    if (n >= 100_000) {
-        const rounded = roundTo(n, 10_000);
-        return rounded >= 1_000_000 ? formatLargeNumber(rounded, decimal) : `${rounded / 1_000}k`;
+    if (count >= 100_000) {
+        const roundedCount = roundToStep(count, 10_000);
+        return roundedCount >= 1_000_000 ? formatLargeNumber(roundedCount, showDecimal) : `${roundedCount / 1_000}k`;
     }
-    if (n >= 10_000) {
-        const rounded = decimal ? roundTo(n, 100) : roundTo(n, 1_000);
-        if (rounded >= 100_000) {
-            return formatLargeNumber(rounded, decimal);
+    if (count >= 10_000) {
+        const roundedCount = showDecimal ? roundToStep(count, 100) : roundToStep(count, 1_000);
+        if (roundedCount >= 100_000) {
+            return formatLargeNumber(roundedCount, showDecimal);
         }
-        return decimal ? `${(rounded / 1_000).toFixed(1)}k` : `${rounded / 1_000}k`;
+        return showDecimal ? `${(roundedCount / 1_000).toFixed(1)}k` : `${roundedCount / 1_000}k`;
     }
-    return n.toString();
+    return count.toString();
 }
 
-function fetchWithTimeout(url, init = {}, timeoutMs = fetchTimeoutMs) {
-    return fetch(url, {...init, signal: AbortSignal.timeout(timeoutMs)});
+function fetchWithTimeout(url, requestInit = {}, timeoutMs = fetchTimeoutMs) {
+    return fetch(url, {...requestInit, signal: AbortSignal.timeout(timeoutMs)});
 }
 
-async function fetchGitHubStats(owner, repo) {
-    const headers = {"User-Agent": "resume-compiler", Accept: "application/vnd.github+json"};
+async function fetchGitHubStats(owner, repositoryName) {
+    const requestHeaders = {"User-Agent": "resume-compiler", Accept: "application/vnd.github+json"};
     if (process.env.GITHUB_TOKEN) {
-        headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+        requestHeaders.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
     try {
-        const res = await fetchWithTimeout(`${github.apiUrl}/${owner}/${repo}`, {headers});
-        if (!res.ok) {
-            console.warn(`GitHub API error for ${owner}/${repo}: ${res.status}`);
+        const response = await fetchWithTimeout(`${github.apiUrl}/${owner}/${repositoryName}`, {headers: requestHeaders});
+        if (!response.ok) {
+            console.warn(`GitHub API error for ${owner}/${repositoryName}: ${response.status}`);
             return null;
         }
-        const data = await res.json();
-        return {stars: data.stargazers_count, forks: data.forks_count};
-    } catch (e) {
-        console.warn(`Failed to fetch GitHub stats for ${owner}/${repo}:`, e.message);
+        const repository = await response.json();
+        return {stars: repository.stargazers_count, forks: repository.forks_count};
+    } catch (error) {
+        console.warn(`Failed to fetch GitHub stats for ${owner}/${repositoryName}:`, error.message);
         return null;
     }
 }
@@ -68,135 +69,153 @@ async function fetchYouTubeStats(videoId) {
         return null;
     }
     try {
-        const params = new URLSearchParams({part: "statistics", id: videoId, key: apiKey});
-        const res = await fetchWithTimeout(`${youtube.apiUrl}?${params}`);
-        if (!res.ok) {
-            console.warn(`YouTube API error: ${res.status} ${await res.text()}`);
+        const queryParameters = new URLSearchParams({part: "statistics", id: videoId, key: apiKey});
+        const response = await fetchWithTimeout(`${youtube.apiUrl}?${queryParameters}`);
+        if (!response.ok) {
+            console.warn(`YouTube API error: ${response.status} ${await response.text()}`);
             return null;
         }
-        const data = await res.json();
-        const viewCount = data.items?.[0]?.statistics?.viewCount;
+        const videoList = await response.json();
+        const viewCount = videoList.items?.[0]?.statistics?.viewCount;
         if (viewCount === undefined) return null;
         return {views: parseInt(viewCount, 10)};
-    } catch (e) {
-        console.warn("Failed to fetch YouTube stats:", e.message);
+    } catch (error) {
+        console.warn("Failed to fetch YouTube stats:", error.message);
         return null;
     }
 }
 
-function loadCache() {
+function loadStatsCache() {
     try {
-        return JSON.parse(fs.readFileSync(paths.cache, "utf-8"));
+        return JSON.parse(fs.readFileSync(paths.statsCacheFile, "utf-8"));
     } catch {
         return {};
     }
 }
 
-function saveCache(cache) {
-    fs.writeFileSync(paths.cache, JSON.stringify(cache, null, 2) + "\n");
+function saveStatsCache(statsCache) {
+    fs.writeFileSync(paths.statsCacheFile, JSON.stringify(statsCache, null, 2) + "\n");
 }
 
 async function buildPlaceholders() {
-    const [ytStorage, mcav, yt] = await Promise.all([
+    const [ytStorageStats, mcavStats, youtubeStats] = await Promise.all([
         fetchGitHubStats(github.owner, github.ytStorageRepo),
         fetchGitHubStats(github.owner, github.mcavRepo),
         fetchYouTubeStats(youtube.videoId),
     ]);
-    const cache = loadCache();
-    if (ytStorage) cache.ytStorage = ytStorage;
-    if (mcav) cache.mcav = mcav;
-    if (yt) cache.youtube = yt;
+    const statsCache = loadStatsCache();
+    if (ytStorageStats) statsCache.ytStorage = ytStorageStats;
+    if (mcavStats) statsCache.mcav = mcavStats;
+    if (youtubeStats) statsCache.youtube = youtubeStats;
 
     const placeholders = {...staticPlaceholders};
-    if (cache.ytStorage) {
-        placeholders.YT_STORAGE_STARS = formatGitHubStat(cache.ytStorage.stars);
-        placeholders.YT_STORAGE_FORKS = formatGitHubStat(cache.ytStorage.forks);
+    if (statsCache.ytStorage) {
+        placeholders.YT_STORAGE_STARS = formatGitHubStat(statsCache.ytStorage.stars);
+        placeholders.YT_STORAGE_FORKS = formatGitHubStat(statsCache.ytStorage.forks);
     }
-    if (cache.mcav) {
-        placeholders.MCAV_STARS = formatGitHubStat(cache.mcav.stars);
-        placeholders.MCAV_FORKS = formatGitHubStat(cache.mcav.forks);
+    if (statsCache.mcav) {
+        placeholders.MCAV_STARS = formatGitHubStat(statsCache.mcav.stars);
+        placeholders.MCAV_FORKS = formatGitHubStat(statsCache.mcav.forks);
     }
-    if (cache.youtube) {
-        placeholders.YT_VIEWERS = formatLargeNumber(cache.youtube.views);
-        placeholders.YT_IMPRESSIONS = formatLargeNumber(cache.youtube.views * youtube.impressionsMultiplier, true);
-    }
-
-    const missing = requiredPlaceholders.filter(k => !(k in placeholders));
-    if (missing.length > 0) {
-        throw new Error(`Missing placeholders with no cached fallback: ${missing.join(", ")}`);
+    if (statsCache.youtube) {
+        placeholders.YT_VIEWERS = formatLargeNumber(statsCache.youtube.views);
+        placeholders.YT_IMPRESSIONS = formatLargeNumber(statsCache.youtube.views * youtube.impressionsMultiplier, true);
     }
 
-    saveCache(cache);
+    const missingPlaceholderNames = requiredPlaceholders.filter((placeholderName) => !(placeholderName in placeholders));
+    if (missingPlaceholderNames.length > 0) {
+        throw new Error(`Missing placeholders with no cached fallback: ${missingPlaceholderNames.join(", ")}`);
+    }
+
+    saveStatsCache(statsCache);
     return placeholders;
 }
 
-function replacePlaceholders(content, placeholders) {
-    return content.replace(/\{\{(\w+)}}/g, (match, key) => {
-        if (!(key in placeholders)) {
-            throw new Error(`Unknown placeholder: ${match}`);
+function replacePlaceholders(texSource, placeholders) {
+    return texSource.replace(/\{\{(\w+)}}/g, (placeholderToken, placeholderName) => {
+        if (!(placeholderName in placeholders)) {
+            throw new Error(`Unknown placeholder: ${placeholderToken}`);
         }
-        return placeholders[key];
+        return placeholders[placeholderName];
     });
 }
 
-function isRetryable(status) {
-    return status === 429 || status >= 500;
+function isRetryableStatus(httpStatus) {
+    return httpStatus === 429 || httpStatus >= 500;
 }
 
-async function compile(content, label) {
+async function compileLatexToPdf(texSource, pdfLabel) {
     for (let attempt = 1; ; attempt++) {
-        let status;
-        let error;
+        let responseStatus;
+        let responseErrorBody;
         try {
             const response = await fetchWithTimeout(latex.compileUrl, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({compiler: latex.compiler, resources: [{main: true, content}]}),
+                body: JSON.stringify({compiler: latex.compiler, resources: [{main: true, content: texSource}]}),
             }, latex.timeoutMs);
-            status = response.status;
+            responseStatus = response.status;
             if (response.ok) {
                 return Buffer.from(await response.arrayBuffer());
             }
-            error = await response.text();
-        } catch (e) {
-            if (attempt >= latex.maxAttempts) throw e;
-            console.warn(`Compile request for ${label} failed (${e.message}), retrying...`);
+            responseErrorBody = await response.text();
+        } catch (error) {
+            if (attempt >= latex.maxAttempts) throw error;
+            console.warn(`Compile request for ${pdfLabel} failed (${error.message}), retrying...`);
             await sleep(latex.retryDelayMs * attempt);
             continue;
         }
 
-        if (isRetryable(status) && attempt < latex.maxAttempts) {
-            console.warn(`Compile service returned ${status} for ${label}, retrying...`);
+        if (isRetryableStatus(responseStatus) && attempt < latex.maxAttempts) {
+            console.warn(`Compile service returned ${responseStatus} for ${pdfLabel}, retrying...`);
             await sleep(latex.retryDelayMs * attempt);
             continue;
         }
-        throw new Error(`Resume compilation failed for ${label} (${status}):\n${error}`);
+        throw new Error(`LaTeX compilation failed for ${pdfLabel} (${responseStatus}):\n${responseErrorBody}`);
     }
 }
 
-function redactContent(content) {
-    const x = (s) => {
-        const redacted = s.replace(/[a-zA-Z0-9]/g, "X");
-        return redacted.length > redactionMaxLength ? "X".repeat(redactionMaxLength) : redacted;
-    };
-    const redacted = redactionPatterns.reduce((r, pattern) => r.replace(pattern, x), content);
-    // Redacted URLs are not valid link targets, so render links as plain underlined text.
-    return redacted.replace("\\begin{document}", "\\renewcommand{\\href}[2]{\\uline{#2}}\n\\begin{document}");
+function maskSensitiveText(sensitiveText) {
+    const maskedText = sensitiveText.replace(/[a-zA-Z0-9]/g, "X");
+    return maskedText.length > redactionMaxLength ? "X".repeat(redactionMaxLength) : maskedText;
 }
 
-async function resume() {
-    const template = fs.readFileSync(paths.template, "utf-8");
+function redactTexSource(texSource) {
+    const redactedTexSource = redactionPatterns.reduce(
+        (partiallyRedactedSource, redactionPattern) => partiallyRedactedSource.replace(redactionPattern, maskSensitiveText),
+        texSource,
+    );
+    // Redacted URLs are not valid link targets, so render links as plain underlined text.
+    return redactedTexSource.replace("\\begin{document}", "\\renewcommand{\\href}[2]{\\uline{#2}}\n\\begin{document}");
+}
+
+async function compileDocument(documentDefinition, placeholders) {
+    const {texTemplateFileName, pdfFileName, redactedPdfFileName} = documentDefinition;
+    const texTemplate = fs.readFileSync(path.join(paths.texTemplateDirectory, texTemplateFileName), "utf-8");
+    const texSource = replacePlaceholders(texTemplate, placeholders);
+
+    const compiledPdfs = [{fileName: pdfFileName, pdfBuffer: await compileLatexToPdf(texSource, pdfFileName)}];
+    if (redactedPdfFileName) {
+        const redactedPdfBuffer = await compileLatexToPdf(redactTexSource(texSource), redactedPdfFileName);
+        compiledPdfs.push({fileName: redactedPdfFileName, pdfBuffer: redactedPdfBuffer});
+    }
+    return compiledPdfs;
+}
+
+async function compileAllDocuments() {
     const placeholders = await buildPlaceholders();
-    const content = replacePlaceholders(template, placeholders);
-    const pdf = await compile(content, "resume.pdf");
-    const redactedPdf = await compile(redactContent(content), "redacted.pdf");
-    fs.writeFileSync(paths.pdf, pdf);
-    fs.writeFileSync(paths.redactedPdf, redactedPdf);
+    const compiledPdfsPerDocument = await Promise.all(
+        documents.map((documentDefinition) => compileDocument(documentDefinition, placeholders)),
+    );
+    fs.mkdirSync(paths.pdfOutputDirectory, {recursive: true});
+    for (const {fileName, pdfBuffer} of compiledPdfsPerDocument.flat()) {
+        fs.writeFileSync(path.join(paths.pdfOutputDirectory, fileName), pdfBuffer);
+    }
 }
 
 try {
-    await resume();
-} catch (e) {
-    console.error(e.message);
+    await compileAllDocuments();
+} catch (error) {
+    console.error(error.message);
     process.exit(1);
 }

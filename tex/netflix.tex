@@ -1,0 +1,92 @@
+%-------------------------
+% Cover Letter in Latex
+% Preamble and header match resume (Jake Gutierrez template, MIT)
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{contour}
+\usepackage[normalem]{ulem}
+\usepackage{twemojis}
+\renewcommand{\ULdepth}{1.8pt}
+\renewcommand{\ULthickness}{0.2pt}
+\contourlength{0.8pt}
+\let\oldhref\href
+\renewcommand{\href}[2]{\oldhref{#1}{\uline{#2}}}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins (same as resume)
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+
+% Letter body spacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+% Ensure that generated pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+\pdfinfoomitdate=1
+\pdftrailerid{}
+\pdfsuppressptexinfo=-1
+
+%-------------------------------------------
+\begin{document}
+
+%----------HEADING----------
+    \begin{center}
+        \textbf{\Huge \scshape Brandon Li} \\ \vspace{1pt}
+        \small 978-245-5532 $|$
+        \href{mailto:jobs@brandonli.me}{jobs@brandonli.me} $|$
+        \href{https://brandonli.me}{brandonli.me} $|$
+        \href{https://linkedin.com/in/brandonli28}{linkedin.com/in/brandonli28} $|$
+        \href{https://github.com/PulseBeat02}{github.com/PulseBeat02}
+    \end{center}
+    \vspace{-2pt}
+    \hrule
+    \vspace{6pt}
+
+%----------LETTER----------
+Hi Netflix!
+
+I'm glad that you got to my internship application! My name is Brandon, and I'm currently a junior studying computer science at UCLA.
+
+For me, I've always been drawn to Netflix because of how much innovation comes out of your video technologies. Netflix invests so much (a lot) time and effort into optimizing video pipelines for both encode and decode to give viewers the best experience possible, and I can feel that as a viewer myself.
+
+I've been following Netflix's codec research for several years --- from when they partnered with Intel to launch \href{https://gitlab.com/AOMediaCodec/SVT-AV1}{SVT-AV1} to make AV1 software encoding possible, to their bandwidth research with \href{https://netflixtechblog.com/av1-scale-film-grain-synthesis-the-awakening-ee09cfdff40b}{AV1 film grain synthesis (FGS)}, which strips film grain out before encoding and synthesizes it back in during playback to help increase compression efficiency, to their \href{https://medium.com/netflix-techblog/netflix-downloads-on-android-d79db40f1732}{integration with ExoPlayer} to provide offline playback.
+
+Some of my work this past summer at YouTube was in the same exact domain -- I worked on the YouTube Android App and the ExoPlayer library to help add AV1 HDR decoding support. I also researched AV1 film grain synthesis on a shader, and proposed a way to integrate libplacebo into the existing pipeline to help offload synthesis from the CPU onto a GPU. Even before that, when I was at VideoLAN interning under Jean-Baptiste Kempf, I spent free time researching the AV1 specification just for fun. I also like to develop video codecs on the side for learning purposes. For my most recent video codec, I used Netflix's \href{https://github.com/Netflix/vmaf}{VMAF} to score every optimization round and compare it with existing codecs. You can see some of my work on my blog below:
+
+\begin{itemize}[leftmargin=0.15in, itemsep=0pt, topsep=0pt]
+    \item \href{https://blog.brandonli.me/engineering-software-av1-hdr-playback-and-gpu-shaders-on-youtube-android/}{Engineering Software AV1 HDR Playback and GPU Shaders on YouTube Android}
+    \item \href{https://blog.brandonli.me/designing-a-real-time-video-codec-with-a-glsl-only-decoder/}{Designing a Real-Time Video Codec with a GLSL-Only Decoder}
+    \item \href{https://blog.brandonli.me/using-youtube-as-cloud-storage/}{Using YouTube as Cloud Storage}
+\end{itemize}
+
+I would love to intern at Netflix to continue changing the media landscape in the years to come. I truly feel that Netflix is one of the biggest drivers in video innovation, and I want to be a part of that.
+
+Thank you! \texttwemoji{smiley}
+
+Best,\\
+Brandon
+\end{document}

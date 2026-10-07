@@ -6,6 +6,7 @@ const DOCUMENT_ALIASES = [
     {source: '/resume', destination: '/documents/resume.pdf'},
     {source: '/resume.pdf', destination: '/documents/resume.pdf'},
     {source: '/redacted.pdf', destination: '/documents/redacted.pdf'},
+    {source: '/netflix.pdf', destination: '/documents/netflix.pdf'},
 ];
 
 const DOCUMENT_PATH_SOURCES = ['/documents/:path*', ...DOCUMENT_ALIASES.map((documentAlias) => documentAlias.source)];

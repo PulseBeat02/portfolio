@@ -7,7 +7,7 @@ on:
   push:
     branches: [master]
     paths:
-      - resume/resume.tex
+      - tex/**
       - scripts/resume.js
       - scripts/resume.config.js
 
@@ -39,7 +39,7 @@ jobs:
 
       - name: Commit and push if changed
         run: |
-          git add public/documents/resume.pdf public/documents/redacted.pdf
+          git add public/documents/*.pdf
           git diff --cached --quiet && exit 0
           git add scripts/resume-cache.json
           git config user.name "github-actions[bot]"

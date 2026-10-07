@@ -1,14 +1,19 @@
 import {fileURLToPath} from "url";
 import path from "path";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const scriptsDirectory = path.dirname(fileURLToPath(import.meta.url));
+const projectRootDirectory = path.join(scriptsDirectory, "..");
 
 export const paths = {
-    template: path.join(__dirname, "..", "resume", "resume.tex"),
-    pdf: path.join(__dirname, "..", "public", "documents", "resume.pdf"),
-    redactedPdf: path.join(__dirname, "..", "public", "documents", "redacted.pdf"),
-    cache: path.join(__dirname, "resume-cache.json"),
+    texTemplateDirectory: path.join(projectRootDirectory, "tex"),
+    pdfOutputDirectory: path.join(projectRootDirectory, "public", "documents"),
+    statsCacheFile: path.join(scriptsDirectory, "resume-cache.json"),
 };
+
+export const documents = [
+    {texTemplateFileName: "resume.tex", pdfFileName: "resume.pdf", redactedPdfFileName: "redacted.pdf"},
+    {texTemplateFileName: "netflix.tex", pdfFileName: "netflix.pdf"},
+];
 
 export const github = {
     owner: "PulseBeat02",
