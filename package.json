@@ -41,7 +41,7 @@
       "fast-glob": "npm:tinyglobby@0.2.17"
     }
   },
-  "packageManager": "pnpm@10.34.6",
+  "packageManager": "pnpm@10.34.7",
   "pnpm": {
     "onlyBuiltDependencies": [
       "unrs-resolver"
