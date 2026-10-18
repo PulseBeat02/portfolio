@@ -43,7 +43,7 @@
   },
   "packageManager": "pnpm@10.34.7",
   "pnpm": {
-    "onlyBuiltDependencies": [
+    "ignoredBuiltDependencies": [
       "unrs-resolver"
     ]
   }
