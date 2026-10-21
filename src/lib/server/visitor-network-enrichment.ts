@@ -1,22 +1,12 @@
-import {ExpiringKeySet} from "@/lib/server/expiring-key-set";
-import {lookupIpNetworkOrganization, type IpNetworkOrganization} from "@/lib/server/ip-network-organization";
+import {lookupIpHostname, lookupIpNetworkOrganization, type IpNetworkOrganization} from "@/lib/server/ip-network-organization";
 import {
-    buildUmamiSessionPropertiesRequestBody,
-    parseOwnWebsiteCollectPayload,
+    buildUmamiSessionPropertiesRequest,
     postToUmamiCollectEndpoint,
+    type UmamiRequest,
     type UmamiVisitor,
 } from "@/lib/server/umami-collect";
 
-const ENRICHED_VISITOR_MEMORY_MILLISECONDS = 12 * 60 * 60 * 1000;
-const MAXIMUM_REMEMBERED_ENRICHED_VISITORS = 10_000;
-
-const recentlyEnrichedVisitorKeys = new ExpiringKeySet(ENRICHED_VISITOR_MEMORY_MILLISECONDS, MAXIMUM_REMEMBERED_ENRICHED_VISITORS);
-
-function buildVisitorKey({ipAddress, userAgent}: UmamiVisitor): string {
-    return `${ipAddress}|${userAgent ?? ""}`;
-}
-
-function toUmamiSessionProperties(networkOrganization: IpNetworkOrganization): Record<string, string> {
+function toUmamiNetworkOrganizationProperties(networkOrganization: IpNetworkOrganization): Record<string, string> {
     return {
         network_organization: networkOrganization.organizationName,
         network_asn: networkOrganization.autonomousSystemNumber,
@@ -24,26 +14,29 @@ function toUmamiSessionProperties(networkOrganization: IpNetworkOrganization): R
     };
 }
 
-export async function enrichVisitorSessionWithNetworkOrganization(
-    visitor: UmamiVisitor,
-    collectRequestBody: string,
-    upstreamHeaders: Headers,
-): Promise<void> {
+async function lookupUmamiNetworkProperties(ipAddress: string): Promise<Record<string, string>> {
     const ipinfoAccessToken = process.env.IPINFO_TOKEN;
-    if (!ipinfoAccessToken || !visitor.ipAddress) return;
+    if (!ipinfoAccessToken) return {};
+    const [networkHostname, networkOrganization] = await Promise.all([
+        lookupIpHostname(ipAddress, ipinfoAccessToken),
+        lookupIpNetworkOrganization(ipAddress, ipinfoAccessToken),
+    ]);
+    return {
+        ...(networkHostname ? {network_hostname: networkHostname} : {}),
+        ...(networkOrganization ? toUmamiNetworkOrganizationProperties(networkOrganization) : {}),
+    };
+}
 
-    const visitorKey = buildVisitorKey(visitor);
-    if (recentlyEnrichedVisitorKeys.has(visitorKey)) return;
-
-    const collectPayload = parseOwnWebsiteCollectPayload(collectRequestBody);
-    if (!collectPayload) return;
-
-    recentlyEnrichedVisitorKeys.add(visitorKey);
-    const networkOrganization = await lookupIpNetworkOrganization(visitor.ipAddress, ipinfoAccessToken);
-    if (!networkOrganization) return;
-
+export async function enrichVisitorSessionWithNetworkDetails(
+    umamiServerUrl: string,
+    visitor: UmamiVisitor,
+    collectRequest: UmamiRequest,
+): Promise<void> {
+    if (!visitor.ipAddress) return;
+    const networkProperties = await lookupUmamiNetworkProperties(visitor.ipAddress);
     await postToUmamiCollectEndpoint(
-        buildUmamiSessionPropertiesRequestBody(collectPayload, toUmamiSessionProperties(networkOrganization)),
-        upstreamHeaders,
+        umamiServerUrl,
+        buildUmamiSessionPropertiesRequest(collectRequest, {ip: visitor.ipAddress, ...networkProperties}),
+        visitor,
     );
 }

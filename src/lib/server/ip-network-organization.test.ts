@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import {afterEach, describe, it, mock} from "node:test";
-import {isPublicIpAddress, lookupIpNetworkOrganization} from "./ip-network-organization.ts";
+import {isPublicIpAddress, lookupIpHostname, lookupIpNetworkOrganization} from "./ip-network-organization.ts";
+
+function mockFetchResponse(responseBody: unknown, status = 200) {
+    const fakeFetch: typeof fetch = async () => new Response(JSON.stringify(responseBody), {status});
+    return mock.method(globalThis, "fetch", fakeFetch);
+}
 
 describe("isPublicIpAddress", () => {
     it("accepts public IPv4 and IPv6 addresses", () => {
@@ -18,10 +23,6 @@ describe("isPublicIpAddress", () => {
 
 describe("lookupIpNetworkOrganization", () => {
     afterEach(() => mock.restoreAll());
-
-    function mockFetchResponse(responseBody: unknown, status = 200) {
-        return mock.method(globalThis, "fetch", async () => new Response(JSON.stringify(responseBody), {status}));
-    }
 
     it("maps the IPinfo Lite response to a network organization", async () => {
         const fetchMock = mockFetchResponse({asn: "AS15169", as_name: "Google LLC", as_domain: "google.com"});
@@ -46,5 +47,25 @@ describe("lookupIpNetworkOrganization", () => {
         mock.restoreAll();
         mockFetchResponse({asn: "AS15169"});
         assert.equal(await lookupIpNetworkOrganization("8.8.8.8", "test-token"), null);
+    });
+});
+
+describe("lookupIpHostname", () => {
+    afterEach(() => mock.restoreAll());
+
+    it("returns the hostname of the IPinfo details response", async () => {
+        const fetchMock = mockFetchResponse({ip: "8.8.8.8", hostname: "dns.google"});
+        assert.equal(await lookupIpHostname("8.8.8.8", "test-token"), "dns.google");
+        assert.equal(String(fetchMock.mock.calls[0].arguments[0]), "https://ipinfo.io/8.8.8.8/json?token=test-token");
+    });
+
+    it("returns null for non-public addresses, error responses and addresses without a hostname", async () => {
+        const fetchMock = mockFetchResponse({ip: "8.8.8.8"});
+        assert.equal(await lookupIpHostname("192.168.1.1", "test-token"), null);
+        assert.equal(fetchMock.mock.callCount(), 0);
+        assert.equal(await lookupIpHostname("8.8.8.8", "test-token"), null);
+        mock.restoreAll();
+        mockFetchResponse({hostname: "dns.google"}, 429);
+        assert.equal(await lookupIpHostname("8.8.8.8", "test-token"), null);
     });
 });

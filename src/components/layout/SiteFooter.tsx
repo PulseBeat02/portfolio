@@ -4,7 +4,6 @@ import {Reveal} from "@/components/motion/Reveal";
 import {profile} from "@/data/profile";
 import {SITE_LAST_UPDATED_DATE, siteMetadata} from "@/data/site";
 import {EXTERNAL_LINK_ATTRIBUTES} from "@/components/ui/ExternalLink";
-import {UMAMI_DASHBOARD_URL} from "@/lib/analytics";
 import {formatShortUtcDate} from "@/lib/format";
 import {colors} from "@/theme/tokens";
 
@@ -15,7 +14,6 @@ interface FooterLink {
 
 const FOOTER_LINKS: readonly FooterLink[] = [
     {label: "Source", href: siteMetadata.sourceRepositoryUrl},
-    {label: "Analytics", href: UMAMI_DASHBOARD_URL},
 ];
 
 const footerLinkStyle = {

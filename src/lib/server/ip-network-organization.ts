@@ -1,6 +1,8 @@
 import {isIPv4, isIPv6} from "node:net";
 
 const IPINFO_LITE_LOOKUP_BASE_URL = "https://api.ipinfo.io/lite";
+const IPINFO_DETAILS_LOOKUP_BASE_URL = "https://ipinfo.io";
+const IPINFO_DETAILS_LOOKUP_FORMAT = "json";
 const IPINFO_LOOKUP_TIMEOUT_MILLISECONDS = 3_000;
 
 const NON_PUBLIC_IPV4_PREFIXES = ["10.", "127.", "169.254.", "192.168.", "0."] as const;
@@ -17,6 +19,10 @@ interface IpinfoLiteResponse {
     asn?: unknown;
     as_name?: unknown;
     as_domain?: unknown;
+}
+
+interface IpinfoDetailsResponse {
+    hostname?: unknown;
 }
 
 function isNonPublicIpv4Address(ipAddress: string): boolean {
@@ -48,9 +54,7 @@ function parseIpinfoLiteResponse(response: IpinfoLiteResponse): IpNetworkOrganiz
     };
 }
 
-export async function lookupIpNetworkOrganization(ipAddress: string, ipinfoAccessToken: string): Promise<IpNetworkOrganization | null> {
-    if (!isPublicIpAddress(ipAddress)) return null;
-    const lookupUrl = new URL(`${IPINFO_LITE_LOOKUP_BASE_URL}/${encodeURIComponent(ipAddress)}`);
+async function fetchIpinfoLookup<ResponseType>(lookupUrl: URL, ipinfoAccessToken: string): Promise<ResponseType | null> {
     lookupUrl.searchParams.set("token", ipinfoAccessToken);
     try {
         const lookupResponse = await fetch(lookupUrl, {
@@ -58,8 +62,22 @@ export async function lookupIpNetworkOrganization(ipAddress: string, ipinfoAcces
             signal: AbortSignal.timeout(IPINFO_LOOKUP_TIMEOUT_MILLISECONDS),
         });
         if (!lookupResponse.ok) return null;
-        return parseIpinfoLiteResponse(await lookupResponse.json());
+        return await lookupResponse.json();
     } catch {
         return null;
     }
+}
+
+export async function lookupIpNetworkOrganization(ipAddress: string, ipinfoAccessToken: string): Promise<IpNetworkOrganization | null> {
+    if (!isPublicIpAddress(ipAddress)) return null;
+    const lookupUrl = new URL(`${IPINFO_LITE_LOOKUP_BASE_URL}/${encodeURIComponent(ipAddress)}`);
+    const liteResponse = await fetchIpinfoLookup<IpinfoLiteResponse>(lookupUrl, ipinfoAccessToken);
+    return liteResponse ? parseIpinfoLiteResponse(liteResponse) : null;
+}
+
+export async function lookupIpHostname(ipAddress: string, ipinfoAccessToken: string): Promise<string | null> {
+    if (!isPublicIpAddress(ipAddress)) return null;
+    const lookupUrl = new URL(`${IPINFO_DETAILS_LOOKUP_BASE_URL}/${encodeURIComponent(ipAddress)}/${IPINFO_DETAILS_LOOKUP_FORMAT}`);
+    const detailsResponse = await fetchIpinfoLookup<IpinfoDetailsResponse>(lookupUrl, ipinfoAccessToken);
+    return typeof detailsResponse?.hostname === "string" ? detailsResponse.hostname : null;
 }
