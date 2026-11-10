@@ -25,6 +25,8 @@ export const analyticsEventNames = {
     projectLinkClicked: (projectTitle: string) => `project-${toEventNameSlug(projectTitle)}`,
 } as const;
 
-export function buildAnalyticsEventAttributes(eventName: string) {
-    return {[UMAMI_EVENT_ATTRIBUTE_NAME]: eventName} as const;
+export function buildAnalyticsEventAttributes(eventName: string, eventData?: Record<string, string>): Record<string, string> {
+    const dataAttributes = Object.fromEntries(Object.entries(eventData ?? {})
+        .map(([key, value]) => [`${UMAMI_EVENT_ATTRIBUTE_NAME}-${key}`, value]));
+    return {[UMAMI_EVENT_ATTRIBUTE_NAME]: eventName, ...dataAttributes};
 }

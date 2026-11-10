@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import {afterEach, describe, it, mock} from "node:test";
 import {UMAMI_WEBSITE_ID} from "@/lib/analytics";
 import {
+    buildUmamiSessionPropertiesRequest,
     findNewUmamiSessionToken,
+    parseOwnWebsiteCollectRequest,
     postToUmamiCollectEndpoint,
     resolveUmamiServerUrl,
     resolveUmamiVisitor,
@@ -12,7 +14,7 @@ import {
 
 const UMAMI_SERVER_URL = "https://umami.example.com";
 const COLLECT_ENDPOINT_URL = "http://localhost/ux/api/send";
-const ANONYMOUS_VISITOR: UmamiVisitor = {ipAddress: null, userAgent: null, sessionToken: null};
+const ANONYMOUS_VISITOR: UmamiVisitor = {ipAddress: null, userAgent: null, languages: null, sessionToken: null};
 
 function mockUmamiResponse() {
     const fakeFetch: typeof fetch = async () => Response.json({});
@@ -51,6 +53,12 @@ describe("resolveUmamiServerUrl", () => {
 });
 
 describe("resolveUmamiVisitor", () => {
+    it("reads the visitor's accepted languages", () => {
+        const request = new Request(COLLECT_ENDPOINT_URL, {headers: {"accept-language": "en-US,en;q=0.9"}});
+        assert.equal(resolveUmamiVisitor(request).languages, "en-US,en;q=0.9");
+        assert.equal(resolveUmamiVisitor(new Request(COLLECT_ENDPOINT_URL)).languages, null);
+    });
+
     it("takes the first X-Forwarded-For hop, then X-Real-IP, and drops invalid addresses", () => {
         const visitorIpAddresses: {headers: Record<string, string>; ipAddress: string | null}[] = [
             {headers: {"x-forwarded-for": "203.0.113.7, 198.51.100.2", "x-real-ip": "198.51.100.3"}, ipAddress: "203.0.113.7"},
@@ -69,6 +77,49 @@ describe("resolveUmamiVisitor", () => {
         const knownVisitorRequest = new Request(COLLECT_ENDPOINT_URL, {headers: {"x-umami-cache": "session-token"}});
         assert.equal(resolveUmamiVisitor(knownVisitorRequest).sessionToken, "session-token");
         assert.equal(resolveUmamiVisitor(new Request(COLLECT_ENDPOINT_URL)).sessionToken, null);
+    });
+});
+
+describe("parseOwnWebsiteCollectRequest", () => {
+    it("accepts performance requests only for this website", () => {
+        const performanceRequest = {type: "performance", payload: {website: UMAMI_WEBSITE_ID, data: {lcp: 120}}};
+        assert.deepEqual(parseOwnWebsiteCollectRequest(JSON.stringify(performanceRequest)), performanceRequest);
+        assert.equal(parseOwnWebsiteCollectRequest(JSON.stringify({
+            ...performanceRequest, payload: {...performanceRequest.payload, website: "another-website"},
+        })), null);
+    });
+
+    it("removes reserved session properties from client identifies and keeps all other keys", () => {
+        const data = {
+            ip: "forged", ip_timezone: "forged", ip_: "forged", network_asn: "forged", network_: "forged",
+            client_user_agent: "forged", client_: "forged", plan: "pro", network: "keep", client: "keep",
+            ipAddress: "keep", source_ip: "keep", IP: "keep", count: 2,
+        };
+        const identify = {type: "identify", payload: {website: UMAMI_WEBSITE_ID, id: "visitor-id", data}};
+        assert.deepEqual(parseOwnWebsiteCollectRequest(JSON.stringify(identify)), {
+            ...identify,
+            payload: {...identify.payload, data: {plan: "pro", network: "keep", client: "keep", ipAddress: "keep", source_ip: "keep", IP: "keep", count: 2}},
+        });
+        const event = {...identify, type: "event"};
+        assert.deepEqual(parseOwnWebsiteCollectRequest(JSON.stringify(event)), event);
+    });
+
+    it("keeps identify data unchanged when it is not an object", () => {
+        for (const data of [null, "visitor", 2]) {
+            const identify = {type: "identify", payload: {website: UMAMI_WEBSITE_ID, data}};
+            assert.deepEqual(parseOwnWebsiteCollectRequest(JSON.stringify(identify)), identify);
+        }
+    });
+});
+
+describe("buildUmamiSessionPropertiesRequest", () => {
+    it("preserves string distinct ids and drops non-string ids", () => {
+        for (const id of ["visitor-id", "", 42, null, undefined]) {
+            const request = buildUmamiSessionPropertiesRequest({type: "event", payload: {id}}, {ip: "8.8.8.8"});
+            assert.equal(request.type, "identify");
+            assert.equal(request.payload.id, typeof id === "string" ? id : undefined);
+            assert.deepEqual(request.payload.data, {ip: "8.8.8.8"});
+        }
     });
 });
 

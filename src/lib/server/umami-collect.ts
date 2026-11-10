@@ -9,9 +9,10 @@ const UMAMI_CLIENT_IP_HEADER_NAME = "x-umami-client-ip";
 const UMAMI_SESSION_TOKEN_HEADER_NAME = "x-umami-cache";
 const UMAMI_REQUEST_CONTENT_TYPE = "application/json";
 const IPV4_MAPPED_IPV6_PREFIX = "::ffff:";
-const COLLECT_REQUEST_TYPES = new Set(["event", "identify"]);
+const COLLECT_REQUEST_TYPES = new Set(["event", "identify", "performance"]);
 const RECORD_REQUEST_TYPES = new Set(["record", "heatmap"]);
 const VISITOR_OVERRIDE_PAYLOAD_FIELDS = new Set(["ip", "userAgent", "browser", "os", "device", "timestamp"]);
+const SERVER_SESSION_PROPERTY_PATTERN = /^(ip|ip_.*|network_.*|client_.*)$/;
 
 export interface UmamiRequest {
     type: string;
@@ -21,6 +22,7 @@ export interface UmamiRequest {
 export interface UmamiVisitor {
     ipAddress: string | null;
     userAgent: string | null;
+    languages: string | null;
     sessionToken: string | null;
 }
 
@@ -53,6 +55,7 @@ export function resolveUmamiVisitor(request: Request): UmamiVisitor {
     return {
         ipAddress: rawIpAddress ? normalizeIpAddress(rawIpAddress) : null,
         userAgent: request.headers.get(USER_AGENT_HEADER_NAME),
+        languages: request.headers.get("accept-language"),
         sessionToken: request.headers.get(UMAMI_SESSION_TOKEN_HEADER_NAME),
     };
 }
@@ -133,7 +136,11 @@ function parseOwnWebsiteRequest(requestBody: string, requestTypes: ReadonlySet<s
 }
 
 export function parseOwnWebsiteCollectRequest(collectRequestBody: string): UmamiRequest | null {
-    return parseOwnWebsiteRequest(collectRequestBody, COLLECT_REQUEST_TYPES);
+    const collectRequest = parseOwnWebsiteRequest(collectRequestBody, COLLECT_REQUEST_TYPES);
+    if (collectRequest?.type !== "identify" || !isRecord(collectRequest.payload.data)) return collectRequest;
+    const data = Object.fromEntries(Object.entries(collectRequest.payload.data)
+        .filter(([key]) => !SERVER_SESSION_PROPERTY_PATTERN.test(key)));
+    return {...collectRequest, payload: {...collectRequest.payload, data}};
 }
 
 export function parseOwnWebsiteRecordRequest(recordRequestBody: string): UmamiRequest | null {
@@ -154,6 +161,7 @@ export function buildUmamiSessionPropertiesRequest(
         type: "identify",
         payload: {
             website: UMAMI_WEBSITE_ID,
+            id: stringOrUndefined(payload.id),
             hostname: stringOrUndefined(payload.hostname),
             screen: stringOrUndefined(payload.screen),
             language: stringOrUndefined(payload.language),

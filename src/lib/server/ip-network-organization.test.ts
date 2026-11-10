@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {afterEach, describe, it, mock} from "node:test";
-import {isPublicIpAddress, lookupIpHostname, lookupIpNetworkOrganization} from "./ip-network-organization.ts";
+import {isPublicIpAddress, lookupIpDetails, lookupIpNetworkOrganization} from "./ip-network-organization.ts";
 
 function mockFetchResponse(responseBody: unknown, status = 200) {
     const fakeFetch: typeof fetch = async () => new Response(JSON.stringify(responseBody), {status});
@@ -50,22 +50,33 @@ describe("lookupIpNetworkOrganization", () => {
     });
 });
 
-describe("lookupIpHostname", () => {
+describe("lookupIpDetails", () => {
     afterEach(() => mock.restoreAll());
 
-    it("returns the hostname of the IPinfo details response", async () => {
-        const fetchMock = mockFetchResponse({ip: "8.8.8.8", hostname: "dns.google"});
-        assert.equal(await lookupIpHostname("8.8.8.8", "test-token"), "dns.google");
+    it("returns hostname and location details from one IPinfo response", async () => {
+        const fetchMock = mockFetchResponse({ip: "8.8.8.8", hostname: "dns.google", timezone: "America/Los_Angeles", postal: "94043", loc: "37.4056,-122.0775"});
+        assert.deepEqual(await lookupIpDetails("8.8.8.8", "test-token"), {
+            hostname: "dns.google", timezone: "America/Los_Angeles", postal: "94043", location: "37.4056,-122.0775",
+        });
+        assert.equal(fetchMock.mock.callCount(), 1);
         assert.equal(String(fetchMock.mock.calls[0].arguments[0]), "https://ipinfo.io/8.8.8.8/json?token=test-token");
     });
 
-    it("returns null for non-public addresses, error responses and addresses without a hostname", async () => {
+    it("omits missing details and returns null for non-public addresses and error responses", async () => {
         const fetchMock = mockFetchResponse({ip: "8.8.8.8"});
-        assert.equal(await lookupIpHostname("192.168.1.1", "test-token"), null);
+        assert.equal(await lookupIpDetails("192.168.1.1", "test-token"), null);
         assert.equal(fetchMock.mock.callCount(), 0);
-        assert.equal(await lookupIpHostname("8.8.8.8", "test-token"), null);
+        assert.deepEqual(await lookupIpDetails("8.8.8.8", "test-token"), {});
         mock.restoreAll();
         mockFetchResponse({hostname: "dns.google"}, 429);
-        assert.equal(await lookupIpHostname("8.8.8.8", "test-token"), null);
+        assert.equal(await lookupIpDetails("8.8.8.8", "test-token"), null);
+    });
+
+    it("omits non-string details while keeping valid strings", async () => {
+        mockFetchResponse({hostname: 1, timezone: null, postal: 94043, loc: [37, -122]});
+        assert.deepEqual(await lookupIpDetails("8.8.8.8", "test-token"), {});
+        mock.restoreAll();
+        mockFetchResponse({timezone: "Europe/London", postal: false});
+        assert.deepEqual(await lookupIpDetails("8.8.8.8", "test-token"), {timezone: "Europe/London"});
     });
 });

@@ -98,7 +98,7 @@ describe("analytics proxy with UMAMI_URL", () => {
         for (const scriptRoute of ["script.js", "recorder.js"]) {
             const scriptResponse = await getFromProxy(scriptRoute);
             assert.equal(scriptResponse.status, 200);
-            assert.equal(scriptResponse.headers.get("cache-control"), "public, max-age=86400");
+            assert.equal(scriptResponse.headers.get("cache-control"), "public, max-age=3600");
             assert.equal(await scriptResponse.text(), `// https://umami.example.com/${scriptRoute}`);
         }
         assert.equal(fetchMock.mock.callCount(), 2);
@@ -126,7 +126,7 @@ describe("analytics proxy with UMAMI_URL", () => {
         assert.equal(fetchMock.mock.callCount(), 0);
     });
 
-    it("rejects everything but events and identifies of this website on the collect endpoint with 400", async () => {
+    it("rejects everything but events, identifies and performance of this website on the collect endpoint with 400", async () => {
         const fetchMock = mockUmamiServer(() => Response.json({}));
         const foreignCollectRequestBodies = [
             JSON.stringify({type: "event", payload: {website: OTHER_WEBSITE_ID, url: "/"}}),
@@ -224,7 +224,7 @@ describe("analytics proxy with UMAMI_URL", () => {
                 "x-umami-client-ip": VISITOR_IP_ADDRESS,
                 "x-umami-cache": UMAMI_SESSION_TOKEN,
             },
-            body: {type: "identify", payload: {website: UMAMI_WEBSITE_ID, url: "/", data: {ip: VISITOR_IP_ADDRESS}}},
+            body: {type: "identify", payload: {website: UMAMI_WEBSITE_ID, url: "/", data: {ip: VISITOR_IP_ADDRESS, client_user_agent: "Mozilla/5.0"}}},
             cache: "no-store",
         });
     });

@@ -23,6 +23,16 @@ interface IpinfoLiteResponse {
 
 interface IpinfoDetailsResponse {
     hostname?: unknown;
+    timezone?: unknown;
+    postal?: unknown;
+    loc?: unknown;
+}
+
+export interface IpDetails {
+    hostname?: string;
+    timezone?: string;
+    postal?: string;
+    location?: string;
 }
 
 function isNonPublicIpv4Address(ipAddress: string): boolean {
@@ -75,9 +85,15 @@ export async function lookupIpNetworkOrganization(ipAddress: string, ipinfoAcces
     return liteResponse ? parseIpinfoLiteResponse(liteResponse) : null;
 }
 
-export async function lookupIpHostname(ipAddress: string, ipinfoAccessToken: string): Promise<string | null> {
+export async function lookupIpDetails(ipAddress: string, ipinfoAccessToken: string): Promise<IpDetails | null> {
     if (!isPublicIpAddress(ipAddress)) return null;
     const lookupUrl = new URL(`${IPINFO_DETAILS_LOOKUP_BASE_URL}/${encodeURIComponent(ipAddress)}/${IPINFO_DETAILS_LOOKUP_FORMAT}`);
     const detailsResponse = await fetchIpinfoLookup<IpinfoDetailsResponse>(lookupUrl, ipinfoAccessToken);
-    return typeof detailsResponse?.hostname === "string" ? detailsResponse.hostname : null;
+    if (!detailsResponse) return null;
+    return {
+        ...(typeof detailsResponse.hostname === "string" ? {hostname: detailsResponse.hostname} : {}),
+        ...(typeof detailsResponse.timezone === "string" ? {timezone: detailsResponse.timezone} : {}),
+        ...(typeof detailsResponse.postal === "string" ? {postal: detailsResponse.postal} : {}),
+        ...(typeof detailsResponse.loc === "string" ? {location: detailsResponse.loc} : {}),
+    };
 }

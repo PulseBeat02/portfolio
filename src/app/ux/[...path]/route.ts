@@ -13,7 +13,7 @@ import {
 } from "@/lib/server/umami-collect";
 import {enrichVisitorSessionWithNetworkDetails} from "@/lib/server/visitor-network-enrichment";
 
-const UMAMI_SCRIPT_CACHE_SECONDS = 24 * 60 * 60;
+const UMAMI_SCRIPT_CACHE_SECONDS = 60 * 60;
 const UMAMI_GET_TIMEOUT_MILLISECONDS = 5_000;
 const MAXIMUM_COLLECT_BODY_BYTES = 16 * 1024;
 const MAXIMUM_RECORD_BODY_BYTES = 1_000_000;

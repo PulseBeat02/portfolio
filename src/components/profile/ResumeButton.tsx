@@ -56,7 +56,7 @@ export function ResumeButton() {
                 variant="outlined"
                 endIcon={<OpenInNewIcon/>}
                 onClick={() => setIsResumeOpen(true)}
-                {...buildAnalyticsEventAttributes(analyticsEventNames.resumeOpened)}
+                {...buildAnalyticsEventAttributes(analyticsEventNames.resumeOpened, {url: siteMetadata.resumePath})}
                 sx={{mt: 2, whiteSpace: 'nowrap', ...accentButtonStyle}}
             >
                 View My Resume (PDF)

@@ -15,6 +15,7 @@ export function AnalyticsScript() {
                 data-website-id={UMAMI_WEBSITE_ID}
                 data-host-url={ANALYTICS_PROXY_BASE_PATH}
                 data-domains={SITE_HOSTNAME}
+                data-performance="true"
                 strategy="afterInteractive"
             />
             <Script

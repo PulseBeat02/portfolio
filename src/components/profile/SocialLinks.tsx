@@ -14,7 +14,7 @@ function SocialIconLink({Icon, href, label}: SocialLink) {
             href={href}
             {...EXTERNAL_LINK_ATTRIBUTES}
             aria-label={label}
-            {...buildAnalyticsEventAttributes(analyticsEventNames.socialLinkClicked(label))}
+            {...buildAnalyticsEventAttributes(analyticsEventNames.socialLinkClicked(label), {url: href})}
             sx={{
                 display: 'inline-flex',
                 color: 'inherit',

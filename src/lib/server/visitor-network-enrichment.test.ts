@@ -6,12 +6,16 @@ import {enrichVisitorSessionWithNetworkDetails} from "./visitor-network-enrichme
 
 const UMAMI_SERVER_URL = "https://umami.example.com";
 const UMAMI_COLLECT_ENDPOINT_URL = "https://umami.example.com/api/send";
-const VISITOR: UmamiVisitor = {ipAddress: "8.8.8.8", userAgent: "Mozilla/5.0", sessionToken: "session-token"};
-const FORGED_EVENT = {type: "event", payload: {website: UMAMI_WEBSITE_ID, hostname: "brandonli.me", url: "/", ip: "198.51.100.1"}};
+const VISITOR: UmamiVisitor = {ipAddress: "8.8.8.8", userAgent: "Mozilla/5.0", languages: "en-US,en;q=0.9", sessionToken: "session-token"};
+const FORGED_EVENT = {type: "event", payload: {website: UMAMI_WEBSITE_ID, id: "visitor-id", hostname: "brandonli.me", url: "/", ip: "198.51.100.1"}};
+
+const CLIENT_PROPERTIES = {client_user_agent: VISITOR.userAgent, client_languages: VISITOR.languages};
 
 const IPINFO_ANSWERS = new Map<string, object>([
     ["https://api.ipinfo.io/lite/8.8.8.8?token=test-token", {asn: "AS15169", as_name: "Google LLC", as_domain: "google.com"}],
-    ["https://ipinfo.io/8.8.8.8/json?token=test-token", {ip: "8.8.8.8", hostname: "dns.google"}],
+    ["https://ipinfo.io/8.8.8.8/json?token=test-token", {
+        ip: "8.8.8.8", hostname: "dns.google", timezone: "America/Los_Angeles", postal: "94043", loc: "37.4056,-122.0775",
+    }],
 ]);
 
 function mockFetch(answer: (requestedUrl: string) => Response) {
@@ -59,10 +63,15 @@ describe("enrichVisitorSessionWithNetworkDetails", () => {
                 type: "identify",
                 payload: {
                     website: UMAMI_WEBSITE_ID,
+                    id: "visitor-id",
                     hostname: "brandonli.me",
                     url: "/",
                     data: {
                         ip: "8.8.8.8",
+                        ...CLIENT_PROPERTIES,
+                        ip_timezone: "America/Los_Angeles",
+                        ip_postal: "94043",
+                        ip_location: "37.4056,-122.0775",
                         network_hostname: "dns.google",
                         network_organization: "Google LLC",
                         network_asn: "AS15169",
@@ -73,23 +82,31 @@ describe("enrichVisitorSessionWithNetworkDetails", () => {
         }]);
     });
 
-    it("tags the session with the IP address alone without IPINFO_TOKEN or when IPinfo does not answer", async () => {
+    it("tags the session with IP and client properties without IPINFO_TOKEN or when IPinfo does not answer", async () => {
         const fetchMock = mockFetch(() => Response.json({error: "rate limited"}, {status: 429}));
         await enrichVisitorSessionWithNetworkDetails(UMAMI_SERVER_URL, VISITOR, FORGED_EVENT);
         assert.equal(fetchMock.mock.callCount(), 1);
         process.env.IPINFO_TOKEN = "test-token";
         await enrichVisitorSessionWithNetworkDetails(UMAMI_SERVER_URL, VISITOR, FORGED_EVENT);
         assert.equal(fetchMock.mock.callCount(), 4);
-        assert.deepEqual(readSessionProperties(fetchMock), [{ip: "8.8.8.8"}, {ip: "8.8.8.8"}]);
+        assert.deepEqual(readSessionProperties(fetchMock), [{ip: "8.8.8.8", ...CLIENT_PROPERTIES}, {ip: "8.8.8.8", ...CLIENT_PROPERTIES}]);
     });
 
     it("skips IPinfo for non-public addresses and sends nothing without an address", async () => {
         process.env.IPINFO_TOKEN = "test-token";
         const fetchMock = mockFetch(answerLikeIpinfo);
         await enrichVisitorSessionWithNetworkDetails(UMAMI_SERVER_URL, {...VISITOR, ipAddress: "192.168.1.1"}, FORGED_EVENT);
-        assert.deepEqual(readSessionProperties(fetchMock), [{ip: "192.168.1.1"}]);
+        assert.deepEqual(readSessionProperties(fetchMock), [{ip: "192.168.1.1", ...CLIENT_PROPERTIES}]);
         await enrichVisitorSessionWithNetworkDetails(UMAMI_SERVER_URL, {...VISITOR, ipAddress: null}, FORGED_EVENT);
         assert.equal(fetchMock.mock.callCount(), 1);
+    });
+
+    it("omits absent client fields and non-string IPinfo details", async () => {
+        process.env.IPINFO_TOKEN = "test-token";
+        const fetchMock = mockFetch(() => Response.json({timezone: 1, postal: null, loc: [37, -122]}));
+        await enrichVisitorSessionWithNetworkDetails(UMAMI_SERVER_URL, {...VISITOR, userAgent: null, languages: null}, FORGED_EVENT);
+        assert.equal(fetchMock.mock.callCount(), 3);
+        assert.deepEqual(readSessionProperties(fetchMock), [{ip: "8.8.8.8"}]);
     });
 
     it("asks IPinfo again for every session instead of keeping its answers", async () => {

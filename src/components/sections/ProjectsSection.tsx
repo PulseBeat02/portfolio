@@ -29,7 +29,7 @@ function ProjectTitleLink({project}: { project: ProjectItem }) {
             href={project.repositoryUrl}
             {...EXTERNAL_LINK_ATTRIBUTES}
             className={PROJECT_TITLE_CLASS_NAME}
-            {...buildAnalyticsEventAttributes(analyticsEventNames.projectLinkClicked(project.title))}
+            {...buildAnalyticsEventAttributes(analyticsEventNames.projectLinkClicked(project.title), {url: project.repositoryUrl})}
             sx={{
                 color: colors.textPrimary,
                 textDecoration: 'none',
