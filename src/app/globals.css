@@ -19,30 +19,6 @@
     animation: fade-in 1.4s ease-out both;
 }
 
-@keyframes reveal-fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes reveal-draw-down {
-    from {
-        transform: scaleY(0);
-    }
-    to {
-        transform: scaleY(1);
-    }
-}
-
-@keyframes reveal-drawn {
-    from, to {
-        transform: none;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
     .fade-in {
         animation: none;
