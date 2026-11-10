@@ -18,6 +18,30 @@ function toReducedMotionKeyframes(keyframes: Keyframe[]): Keyframe[] {
     return keyframes.map((keyframe) => ({opacity: keyframe.opacity ?? 1, transform: 'none'}));
 }
 
+const toCssPropertyName = (property: string) => property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+
+export function buildCssKeyframes(keyframes: Keyframe[]): string {
+    return keyframes.map(({offset, ...properties}, index) => {
+        const declarations = Object.entries(properties).map(([property, value]) => `${toCssPropertyName(property)}:${value}`);
+        return `${(offset ?? index / (keyframes.length - 1)) * 100}%{${declarations.join(';')}}`;
+    }).join('');
+}
+
+const cssKeyframesNames = new Map<string, string>();
+
+function defineCssKeyframes(keyframes: Keyframe[]): string {
+    const cssKeyframes = buildCssKeyframes(keyframes);
+    let keyframesName = cssKeyframesNames.get(cssKeyframes);
+    if (!keyframesName) {
+        keyframesName = `reveal-keyframes-${cssKeyframesNames.size}`;
+        cssKeyframesNames.set(cssKeyframes, keyframesName);
+        const keyframesStyle = document.createElement('style');
+        keyframesStyle.textContent = `@keyframes ${keyframesName}{${cssKeyframes}}`;
+        document.head.append(keyframesStyle);
+    }
+    return keyframesName;
+}
+
 function compareDocumentOrder(first: Element, second: Element): number {
     return first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
 }
@@ -115,13 +139,16 @@ class RevealScheduler {
         return chainList ? this.chainEndSecondsByList.get(chainList) ?? 0 : 0;
     }
 
-    private play(animation: RevealAnimation, delaySeconds: number): void {
-        animation.element.animate(animation.keyframes, {
-            duration: animation.durationSeconds * 1000,
-            easing: animation.easing,
-            delay: delaySeconds * 1000,
-            fill: 'both',
-        });
+    // session replays record dom changes only: an inline css animation is one, element.animate() is not
+    private play({element, keyframes, durationSeconds, easing}: RevealAnimation, delaySeconds: number): void {
+        element.style.animation = `${defineCssKeyframes(keyframes)} ${durationSeconds * 1000}ms ${easing} ${delaySeconds * 1000}ms both`;
+        // a css animation restarts when its element is shown again or a replay seeks, so a finished one restarts at its end
+        const skipRestart = (event: AnimationEvent) => {
+            if (event.target !== element) return;
+            element.removeEventListener('animationend', skipRestart);
+            element.style.animationDelay = `${-durationSeconds * 1000}ms`;
+        };
+        element.addEventListener('animationend', skipRestart);
     }
 }
 
