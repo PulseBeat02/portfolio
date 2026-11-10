@@ -1,10 +1,11 @@
 "use client";
 
 import {useEffect, useRef} from "react";
+import type {RevealKeyframes} from "@/lib/motion/keyframes";
 import {revealScheduler} from "@/lib/motion/reveal-scheduler";
 
 interface RevealAnimationOptions {
-    keyframes: Keyframe[];
+    keyframes: RevealKeyframes;
     durationSeconds: number;
     easing?: string;
     isChainedToList?: boolean;

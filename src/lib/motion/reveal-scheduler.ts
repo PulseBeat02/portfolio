@@ -1,10 +1,11 @@
 import {matchesMinimumWidth, prefersReducedMotion} from "@/lib/browser";
+import type {RevealKeyframes} from "@/lib/motion/keyframes";
 import {layout} from "@/theme/tokens";
 import {motionTimings} from "@/theme/motion";
 
 interface RevealAnimation {
     element: HTMLElement;
-    keyframes: Keyframe[];
+    keyframes: RevealKeyframes;
     durationSeconds: number;
     easing: string;
     isChainedToList: boolean;
@@ -14,8 +15,16 @@ const VISIBILITY_THRESHOLD = 0.2;
 export const REVEAL_GROUP_ATTRIBUTE = "data-reveal-group";
 export const REVEAL_PAIR_ATTRIBUTE = "data-reveal-pair";
 
-function toReducedMotionKeyframes(keyframes: Keyframe[]): Keyframe[] {
-    return keyframes.map((keyframe) => ({opacity: keyframe.opacity ?? 1, transform: 'none'}));
+const toMilliseconds = (seconds: number) => Math.round(seconds * 1000);
+
+// an inline css animation is a dom change that session replays record and play back, element.animate() is not
+export function buildRevealAnimationStyle(
+    {keyframes, durationSeconds, easing}: Pick<RevealAnimation, 'keyframes' | 'durationSeconds' | 'easing'>,
+    delaySeconds: number,
+    isReducedMotion: boolean,
+): string {
+    const animationName = isReducedMotion ? keyframes.reducedMotionAnimationName : keyframes.animationName;
+    return `${animationName} ${toMilliseconds(durationSeconds)}ms ${easing} ${toMilliseconds(delaySeconds)}ms both`;
 }
 
 function compareDocumentOrder(first: Element, second: Element): number {
@@ -43,18 +52,15 @@ class RevealScheduler {
     private intersectionObserver: IntersectionObserver | null = null;
 
     register(animation: RevealAnimation): () => void {
-        const revealAnimation = prefersReducedMotion()
-            ? {...animation, keyframes: toReducedMotionKeyframes(animation.keyframes)}
-            : animation;
         const group = resolveRevealGroup(animation.element);
         const groupAnimations = this.pendingAnimationsByGroup.get(group);
         if (groupAnimations) {
-            groupAnimations.push(revealAnimation);
+            groupAnimations.push(animation);
         } else {
-            this.pendingAnimationsByGroup.set(group, [revealAnimation]);
+            this.pendingAnimationsByGroup.set(group, [animation]);
             this.getIntersectionObserver().observe(group);
         }
-        return () => this.unregister(group, revealAnimation);
+        return () => this.unregister(group, animation);
     }
 
     private unregister(group: Element, animation: RevealAnimation): void {
@@ -116,12 +122,7 @@ class RevealScheduler {
     }
 
     private play(animation: RevealAnimation, delaySeconds: number): void {
-        animation.element.animate(animation.keyframes, {
-            duration: animation.durationSeconds * 1000,
-            easing: animation.easing,
-            delay: delaySeconds * 1000,
-            fill: 'both',
-        });
+        animation.element.style.animation = buildRevealAnimationStyle(animation, delaySeconds, prefersReducedMotion());
     }
 }
 
